@@ -13,11 +13,11 @@ FILEBROWSER_PATH = os.path.join(os.getenv('WINDIR'), 'explorer.exe')
 width = 1000
 height = 800
 
-if hasattr(Qt, 'AA_EnableHighDpiScaling'):
-    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+# if hasattr(Qt, 'AA_EnableHighDpiScaling'):
+#     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
 
-if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
-    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
+# if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
+#     QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
 class MainWindow(QMainWindow):
 	def __init__(self) -> None:
 		super(MainWindow, self).__init__()
@@ -26,7 +26,7 @@ class MainWindow(QMainWindow):
 		self.set_functions()
 		self.pixmap = ''
 		self.image = ''
-		self. curr_image = ''
+		self.curr_image = ''
 		self.filename = ''
 
 	def set_functions(self):
@@ -92,6 +92,7 @@ class MainWindow(QMainWindow):
 			#color = QGraphicsColorizeEffect(self)
 			#color.setColor(QColor(0, 50, 192))
 			#self.pixmap.setGraphicsEffect(color)
+
 			image = ImageOps.grayscale(image).convert("RGBA")
 			self.pixmap = self.img_to_pix(image)
 			
@@ -105,8 +106,9 @@ class MainWindow(QMainWindow):
 			self.ui.image_shower.setPixmap(self.pixmap)
 			self.ui.image_shower.repaint()
 		else:
-			self.pixmap = self.scale(self.pixmap)
-			self.ui.image_shower.setPixmap(self.filename)
+			print("im here")
+			self.pixmap = self.img_to_pix(image)
+			self.ui.image_shower.setPixmap(self.pixmap)
 			self.ui.image_shower.repaint()
 			
 
