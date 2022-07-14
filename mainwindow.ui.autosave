@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1159</width>
+    <height>770</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="verticalLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>231</width>
+      <height>701</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <item>
+      <widget class="QToolBox" name="Settings">
+       <property name="currentIndex">
+        <number>1</number>
+       </property>
+       <widget class="QWidget" name="page">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>229</width>
+          <height>637</height>
+         </rect>
+        </property>
+        <attribute name="label">
+         <string>Image</string>
+        </attribute>
+        <widget class="QWidget" name="verticalLayoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>50</x>
+           <y>10</y>
+           <width>121</width>
+           <height>151</height>
+          </rect>
+         </property>
+         <layout class="QVBoxLayout" name="image_layout">
+          <item>
+           <widget class="QPushButton" name="add_img_btn">
+            <property name="text">
+             <string>Add image</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="save_as_btn">
+            <property name="text">
+             <string>Save as</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="save_btn">
+            <property name="text">
+             <string>Save</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="page_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>229</width>
+          <height>637</height>
+         </rect>
+        </property>
+        <attribute name="label">
+         <string>Options</string>
+        </attribute>
+        <widget class="QWidget" name="verticalLayoutWidget_3">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>10</y>
+           <width>181</width>
+           <height>611</height>
+          </rect>
+         </property>
+         <layout class="QVBoxLayout" name="settings_layout">
+          <item>
+           <widget class="QGroupBox" name="groupBox">
+            <property name="title">
+             <string>Color</string>
+            </property>
+            <widget class="QSlider" name="color_slider">
+             <property name="geometry">
+              <rect>
+               <x>30</x>
+               <y>60</y>
+               <width>22</width>
+               <height>121</height>
+              </rect>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+            </widget>
+            <widget class="QSlider" name="light_slider">
+             <property name="geometry">
+              <rect>
+               <x>80</x>
+               <y>60</y>
+               <width>22</width>
+               <height>121</height>
+              </rect>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+            </widget>
+            <widget class="QSlider" name="dark_slider">
+             <property name="geometry">
+              <rect>
+               <x>130</x>
+               <y>60</y>
+               <width>22</width>
+               <height>121</height>
+              </rect>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+            </widget>
+            <widget class="QSpinBox" name="color_spinbox">
+             <property name="geometry">
+              <rect>
+               <x>20</x>
+               <y>190</y>
+               <width>42</width>
+               <height>26</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QSpinBox" name="light_spinbox">
+             <property name="geometry">
+              <rect>
+               <x>70</x>
+               <y>190</y>
+               <width>42</width>
+               <height>26</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QSpinBox" name="dark_spinbox">
+             <property name="geometry">
+              <rect>
+               <x>120</x>
+               <y>190</y>
+               <width>42</width>
+               <height>26</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QLabel" name="color_label">
+             <property name="geometry">
+              <rect>
+               <x>20</x>
+               <y>20</y>
+               <width>41</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Color</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+            <widget class="QLabel" name="light_label">
+             <property name="geometry">
+              <rect>
+               <x>70</x>
+               <y>20</y>
+               <width>41</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Light</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+            <widget class="QLabel" name="dark_label">
+             <property name="geometry">
+              <rect>
+               <x>120</x>
+               <y>20</y>
+               <width>41</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Dark</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+            <widget class="QCheckBox" name="color_chbox">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="geometry">
+              <rect>
+               <x>33</x>
+               <y>40</y>
+               <width>16</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>CheckBox</string>
+             </property>
+            </widget>
+            <widget class="QCheckBox" name="light_chbox">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="geometry">
+              <rect>
+               <x>84</x>
+               <y>40</y>
+               <width>16</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>CheckBox</string>
+             </property>
+            </widget>
+            <widget class="QCheckBox" name="dark_chbox">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="geometry">
+              <rect>
+               <x>133</x>
+               <y>40</y>
+               <width>16</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>CheckBox</string>
+             </property>
+            </widget>
+            <widget class="QRadioButton" name="normal_radiobtn">
+             <property name="geometry">
+              <rect>
+               <x>30</x>
+               <y>230</y>
+               <width>110</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Normal</string>
+             </property>
+            </widget>
+            <widget class="QRadioButton" name="triangle_radiobtn">
+             <property name="geometry">
+              <rect>
+               <x>30</x>
+               <y>250</y>
+               <width>110</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Triangle</string>
+             </property>
+            </widget>
+            <widget class="QRadioButton" name="mono_radiobtn">
+             <property name="geometry">
+              <rect>
+               <x>30</x>
+               <y>290</y>
+               <width>110</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Mono</string>
+             </property>
+            </widget>
+            <widget class="QRadioButton" name="dual_radiobtn">
+             <property name="geometry">
+              <rect>
+               <x>30</x>
+               <y>270</y>
+               <width>110</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Dual</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="random_btn">
+             <property name="geometry">
+              <rect>
+               <x>90</x>
+               <y>460</y>
+               <width>81</width>
+               <height>29</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Random</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="save_this_btn">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>460</y>
+               <width>81</width>
+               <height>29</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Save this</string>
+             </property>
+            </widget>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="apply_btn">
+            <property name="text">
+             <string>Apply</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="image_shower">
+    <property name="geometry">
+     <rect>
+      <x>252</x>
+      <y>9</y>
+      <width>900</width>
+      <height>700</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1159</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuPaintroom">
+    <property name="title">
+     <string>Paintroom</string>
+    </property>
+   </widget>
+   <addaction name="menuPaintroom"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
