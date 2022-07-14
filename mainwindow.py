@@ -17,12 +17,12 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1001, 691)
+        MainWindow.resize(1159, 734)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayoutWidget_2 = QWidget(self.centralwidget)
         self.verticalLayoutWidget_2.setObjectName(u"verticalLayoutWidget_2")
-        self.verticalLayoutWidget_2.setGeometry(QRect(10, 10, 231, 621))
+        self.verticalLayoutWidget_2.setGeometry(QRect(10, 10, 231, 701))
         self.verticalLayout_3 = QVBoxLayout(self.verticalLayoutWidget_2)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -30,10 +30,10 @@ class Ui_MainWindow(object):
         self.Settings.setObjectName(u"Settings")
         self.page = QWidget()
         self.page.setObjectName(u"page")
-        self.page.setGeometry(QRect(0, 0, 229, 557))
+        self.page.setGeometry(QRect(0, 0, 229, 639))
         self.verticalLayoutWidget = QWidget(self.page)
         self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-        self.verticalLayoutWidget.setGeometry(QRect(50, 10, 121, 151))
+        self.verticalLayoutWidget.setGeometry(QRect(60, 10, 101, 151))
         self.image_layout = QVBoxLayout(self.verticalLayoutWidget)
         self.image_layout.setObjectName(u"image_layout")
         self.image_layout.setContentsMargins(0, 0, 0, 0)
@@ -52,13 +52,46 @@ class Ui_MainWindow(object):
 
         self.image_layout.addWidget(self.save_btn)
 
+        self.verticalLayoutWidget_5 = QWidget(self.page)
+        self.verticalLayoutWidget_5.setObjectName(u"verticalLayoutWidget_5")
+        self.verticalLayoutWidget_5.setGeometry(QRect(50, 210, 131, 159))
+        self.verticalLayout = QVBoxLayout(self.verticalLayoutWidget_5)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.pushButton = QPushButton(self.verticalLayoutWidget_5)
+        self.pushButton.setObjectName(u"pushButton")
+        self.pushButton.setCheckable(True)
+        self.pushButton.setChecked(False)
+
+        self.verticalLayout.addWidget(self.pushButton)
+
+        self.white_radiobtn = QRadioButton(self.verticalLayoutWidget_5)
+        self.white_radiobtn.setObjectName(u"white_radiobtn")
+
+        self.verticalLayout.addWidget(self.white_radiobtn)
+
+        self.black_radiobtn = QRadioButton(self.verticalLayoutWidget_5)
+        self.black_radiobtn.setObjectName(u"black_radiobtn")
+
+        self.verticalLayout.addWidget(self.black_radiobtn)
+
+        self.stripped_radiobtn = QRadioButton(self.verticalLayoutWidget_5)
+        self.stripped_radiobtn.setObjectName(u"stripped_radiobtn")
+
+        self.verticalLayout.addWidget(self.stripped_radiobtn)
+
+        self.squares_radiobtn = QRadioButton(self.verticalLayoutWidget_5)
+        self.squares_radiobtn.setObjectName(u"squares_radiobtn")
+
+        self.verticalLayout.addWidget(self.squares_radiobtn)
+
         self.Settings.addItem(self.page, u"Image")
         self.page_2 = QWidget()
         self.page_2.setObjectName(u"page_2")
-        self.page_2.setGeometry(QRect(0, 0, 229, 557))
+        self.page_2.setGeometry(QRect(0, 0, 229, 639))
         self.verticalLayoutWidget_3 = QWidget(self.page_2)
         self.verticalLayoutWidget_3.setObjectName(u"verticalLayoutWidget_3")
-        self.verticalLayoutWidget_3.setGeometry(QRect(20, 10, 181, 531))
+        self.verticalLayoutWidget_3.setGeometry(QRect(20, 10, 181, 611))
         self.settings_layout = QVBoxLayout(self.verticalLayoutWidget_3)
         self.settings_layout.setObjectName(u"settings_layout")
         self.settings_layout.setContentsMargins(0, 0, 0, 0)
@@ -73,11 +106,13 @@ class Ui_MainWindow(object):
         self.light_slider.setObjectName(u"light_slider")
         self.light_slider.setGeometry(QRect(80, 60, 22, 121))
         self.light_slider.setMaximum(100)
+        self.light_slider.setValue(50)
         self.light_slider.setOrientation(Qt.Vertical)
         self.dark_slider = QSlider(self.groupBox)
         self.dark_slider.setObjectName(u"dark_slider")
         self.dark_slider.setGeometry(QRect(130, 60, 22, 121))
         self.dark_slider.setMaximum(100)
+        self.dark_slider.setValue(50)
         self.dark_slider.setOrientation(Qt.Vertical)
         self.color_spinbox = QSpinBox(self.groupBox)
         self.color_spinbox.setObjectName(u"color_spinbox")
@@ -106,6 +141,7 @@ class Ui_MainWindow(object):
         self.color_chbox.setGeometry(QRect(33, 40, 16, 16))
         self.color_chbox.setLayoutDirection(Qt.LeftToRight)
         self.color_chbox.setAutoFillBackground(False)
+        self.color_chbox.setChecked(True)
         self.light_chbox = QCheckBox(self.groupBox)
         self.light_chbox.setObjectName(u"light_chbox")
         self.light_chbox.setEnabled(True)
@@ -150,23 +186,15 @@ class Ui_MainWindow(object):
 
         self.image_shower = QLabel(self.centralwidget)
         self.image_shower.setObjectName(u"image_shower")
-        self.image_shower.setGeometry(QRect(262, 19, 711, 611))
+        self.image_shower.setGeometry(QRect(252, 10, 900, 700))
         MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QMenuBar(MainWindow)
-        self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1001, 22))
-        self.menuPaintroom = QMenu(self.menubar)
-        self.menuPaintroom.setObjectName(u"menuPaintroom")
-        MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
-        self.menubar.addAction(self.menuPaintroom.menuAction())
-
         self.retranslateUi(MainWindow)
 
-        self.Settings.setCurrentIndex(0)
+        self.Settings.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -177,6 +205,11 @@ class Ui_MainWindow(object):
         self.add_img_btn.setText(QCoreApplication.translate("MainWindow", u"Add image", None))
         self.save_as_btn.setText(QCoreApplication.translate("MainWindow", u"Save as", None))
         self.save_btn.setText(QCoreApplication.translate("MainWindow", u"Save", None))
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Transparency", None))
+        self.white_radiobtn.setText(QCoreApplication.translate("MainWindow", u"white", None))
+        self.black_radiobtn.setText(QCoreApplication.translate("MainWindow", u"black", None))
+        self.stripped_radiobtn.setText(QCoreApplication.translate("MainWindow", u"stripped", None))
+        self.squares_radiobtn.setText(QCoreApplication.translate("MainWindow", u"squares", None))
         self.Settings.setItemText(self.Settings.indexOf(self.page), QCoreApplication.translate("MainWindow", u"Image", None))
         self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"Color", None))
         self.color_label.setText(QCoreApplication.translate("MainWindow", u"Color", None))
@@ -194,6 +227,5 @@ class Ui_MainWindow(object):
         self.apply_btn.setText(QCoreApplication.translate("MainWindow", u"Apply", None))
         self.Settings.setItemText(self.Settings.indexOf(self.page_2), QCoreApplication.translate("MainWindow", u"Options", None))
         self.image_shower.setText("")
-        self.menuPaintroom.setTitle(QCoreApplication.translate("MainWindow", u"Paintroom", None))
     # retranslateUi
 
