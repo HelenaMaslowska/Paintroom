@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>231</width>
+      <width>221</width>
       <height>701</height>
      </rect>
     </property>
@@ -27,105 +27,161 @@
      <item>
       <widget class="QToolBox" name="Settings">
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="page">
         <property name="geometry">
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>229</width>
+          <width>219</width>
           <height>639</height>
          </rect>
         </property>
         <attribute name="label">
          <string>Image</string>
         </attribute>
-        <widget class="QWidget" name="verticalLayoutWidget">
+        <widget class="QGroupBox" name="groupBox_3">
          <property name="geometry">
           <rect>
-           <x>60</x>
-           <y>10</y>
-           <width>101</width>
-           <height>151</height>
-          </rect>
-         </property>
-         <layout class="QVBoxLayout" name="image_layout">
-          <item>
-           <widget class="QPushButton" name="add_img_btn">
-            <property name="text">
-             <string>Add image</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="save_as_btn">
-            <property name="text">
-             <string>Save as</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="save_btn">
-            <property name="text">
-             <string>Save</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="verticalLayoutWidget_5">
-         <property name="geometry">
-          <rect>
-           <x>50</x>
+           <x>30</x>
            <y>210</y>
-           <width>131</width>
-           <height>159</height>
+           <width>161</width>
+           <height>201</height>
           </rect>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <item>
-           <widget class="QPushButton" name="pushButton">
-            <property name="text">
-             <string>Transparency</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="white_radiobtn">
-            <property name="text">
-             <string>white</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="black_radiobtn">
-            <property name="text">
-             <string>black</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="stripped_radiobtn">
-            <property name="text">
-             <string>stripped</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="squares_radiobtn">
-            <property name="text">
-             <string>squares</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <property name="title">
+          <string>For transparent images</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <widget class="QPushButton" name="pushButton">
+          <property name="geometry">
+           <rect>
+            <x>30</x>
+            <y>30</y>
+            <width>101</width>
+            <height>24</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Transparency</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
+         </widget>
+         <widget class="QRadioButton" name="squares_radiobtn">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>160</y>
+            <width>129</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>squares</string>
+          </property>
+         </widget>
+         <widget class="QRadioButton" name="stripped_radiobtn">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>130</y>
+            <width>129</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>stripped</string>
+          </property>
+         </widget>
+         <widget class="QRadioButton" name="white_radiobtn">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>70</y>
+            <width>129</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>white</string>
+          </property>
+         </widget>
+         <widget class="QRadioButton" name="black_radiobtn">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>100</y>
+            <width>129</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>black</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QGroupBox" name="image_groupbox">
+         <property name="geometry">
+          <rect>
+           <x>30</x>
+           <y>10</y>
+           <width>161</width>
+           <height>191</height>
+          </rect>
+         </property>
+         <property name="title">
+          <string>Image</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <widget class="QPushButton" name="add_img_btn">
+          <property name="geometry">
+           <rect>
+            <x>30</x>
+            <y>40</y>
+            <width>99</width>
+            <height>24</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Add image</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="save_as_btn">
+          <property name="geometry">
+           <rect>
+            <x>30</x>
+            <y>70</y>
+            <width>99</width>
+            <height>24</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Save as</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="save_btn">
+          <property name="geometry">
+           <rect>
+            <x>30</x>
+            <y>100</y>
+            <width>99</width>
+            <height>24</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Save</string>
+          </property>
+         </widget>
         </widget>
        </widget>
        <widget class="QWidget" name="page_2">
@@ -133,7 +189,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>229</width>
+          <width>219</width>
           <height>639</height>
          </rect>
         </property>
@@ -146,20 +202,26 @@
            <x>20</x>
            <y>10</y>
            <width>181</width>
-           <height>611</height>
+           <height>521</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="settings_layout">
           <item>
            <widget class="QGroupBox" name="groupBox">
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
             <property name="title">
-             <string>Color</string>
+             <string>Image beautifier</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
             </property>
             <widget class="QSlider" name="color_slider">
              <property name="geometry">
               <rect>
                <x>30</x>
-               <y>60</y>
+               <y>70</y>
                <width>22</width>
                <height>121</height>
               </rect>
@@ -175,7 +237,7 @@
              <property name="geometry">
               <rect>
                <x>80</x>
-               <y>60</y>
+               <y>70</y>
                <width>22</width>
                <height>121</height>
               </rect>
@@ -194,7 +256,7 @@
              <property name="geometry">
               <rect>
                <x>130</x>
-               <y>60</y>
+               <y>70</y>
                <width>22</width>
                <height>121</height>
               </rect>
@@ -213,7 +275,7 @@
              <property name="geometry">
               <rect>
                <x>20</x>
-               <y>190</y>
+               <y>200</y>
                <width>42</width>
                <height>26</height>
               </rect>
@@ -223,27 +285,39 @@
              <property name="geometry">
               <rect>
                <x>70</x>
-               <y>190</y>
+               <y>200</y>
                <width>42</width>
                <height>26</height>
               </rect>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>50</number>
              </property>
             </widget>
             <widget class="QSpinBox" name="dark_spinbox">
              <property name="geometry">
               <rect>
                <x>120</x>
-               <y>190</y>
+               <y>200</y>
                <width>42</width>
                <height>26</height>
               </rect>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>50</number>
              </property>
             </widget>
             <widget class="QLabel" name="color_label">
              <property name="geometry">
               <rect>
                <x>20</x>
-               <y>20</y>
+               <y>30</y>
                <width>41</width>
                <height>20</height>
               </rect>
@@ -259,7 +333,7 @@
              <property name="geometry">
               <rect>
                <x>70</x>
-               <y>20</y>
+               <y>30</y>
                <width>41</width>
                <height>20</height>
               </rect>
@@ -275,7 +349,7 @@
              <property name="geometry">
               <rect>
                <x>120</x>
-               <y>20</y>
+               <y>30</y>
                <width>41</width>
                <height>20</height>
               </rect>
@@ -294,7 +368,7 @@
              <property name="geometry">
               <rect>
                <x>33</x>
-               <y>40</y>
+               <y>50</y>
                <width>16</width>
                <height>16</height>
               </rect>
@@ -319,7 +393,7 @@
              <property name="geometry">
               <rect>
                <x>84</x>
-               <y>40</y>
+               <y>50</y>
                <width>16</width>
                <height>16</height>
               </rect>
@@ -341,7 +415,7 @@
              <property name="geometry">
               <rect>
                <x>133</x>
-               <y>40</y>
+               <y>50</y>
                <width>16</width>
                <height>16</height>
               </rect>
@@ -356,11 +430,21 @@
               <string>CheckBox</string>
              </property>
             </widget>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_2">
+            <property name="title">
+             <string>GroupBox</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignHCenter|Qt::AlignTop</set>
+            </property>
             <widget class="QRadioButton" name="normal_radiobtn">
              <property name="geometry">
               <rect>
-               <x>30</x>
-               <y>230</y>
+               <x>10</x>
+               <y>40</y>
                <width>110</width>
                <height>24</height>
               </rect>
@@ -368,25 +452,15 @@
              <property name="text">
               <string>Normal</string>
              </property>
-            </widget>
-            <widget class="QRadioButton" name="triangle_radiobtn">
-             <property name="geometry">
-              <rect>
-               <x>30</x>
-               <y>250</y>
-               <width>110</width>
-               <height>24</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>Triangle</string>
+             <property name="checked">
+              <bool>true</bool>
              </property>
             </widget>
             <widget class="QRadioButton" name="mono_radiobtn">
              <property name="geometry">
               <rect>
-               <x>30</x>
-               <y>290</y>
+               <x>10</x>
+               <y>100</y>
                <width>110</width>
                <height>24</height>
               </rect>
@@ -398,8 +472,8 @@
             <widget class="QRadioButton" name="dual_radiobtn">
              <property name="geometry">
               <rect>
-               <x>30</x>
-               <y>270</y>
+               <x>10</x>
+               <y>80</y>
                <width>110</width>
                <height>24</height>
               </rect>
@@ -408,33 +482,53 @@
               <string>Dual</string>
              </property>
             </widget>
-            <widget class="QPushButton" name="random_btn">
-             <property name="geometry">
-              <rect>
-               <x>90</x>
-               <y>460</y>
-               <width>81</width>
-               <height>29</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>Random</string>
-             </property>
-            </widget>
-            <widget class="QPushButton" name="save_this_btn">
+            <widget class="QRadioButton" name="triangle_radiobtn">
              <property name="geometry">
               <rect>
                <x>10</x>
-               <y>460</y>
-               <width>81</width>
-               <height>29</height>
+               <y>60</y>
+               <width>110</width>
+               <height>24</height>
               </rect>
              </property>
              <property name="text">
-              <string>Save this</string>
+              <string>Triangle</string>
              </property>
             </widget>
            </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="verticalLayoutWidget_4">
+         <property name="geometry">
+          <rect>
+           <x>30</x>
+           <y>550</y>
+           <width>160</width>
+           <height>71</height>
+          </rect>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <property name="spacing">
+             <number>1</number>
+            </property>
+            <item>
+             <widget class="QPushButton" name="save_this_btn">
+              <property name="text">
+               <string>Save this</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="random_btn">
+              <property name="text">
+               <string>Random</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
            <widget class="QPushButton" name="apply_btn">
@@ -453,15 +547,26 @@
    <widget class="QLabel" name="image_shower">
     <property name="geometry">
      <rect>
-      <x>252</x>
+      <x>241</x>
       <y>10</y>
-      <width>900</width>
+      <width>911</width>
       <height>700</height>
      </rect>
     </property>
     <property name="text">
      <string/>
     </property>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_5">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>360</y>
+      <width>131</width>
+      <height>171</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout"/>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

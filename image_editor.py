@@ -43,7 +43,7 @@ class MainWindow(QMainWindow):
 			pixmap = pixmap.scaledToWidth(w)
 		if (pixmap.height() >= h):
 			pixmap = pixmap.scaledToHeight(h)
-		print(pixmap.width(), pixmap.height())
+		# print(pixmap.width(), pixmap.height())
 		return pixmap
 	
 	def img_to_pix(self, image):
