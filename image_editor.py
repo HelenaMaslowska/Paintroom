@@ -1,3 +1,7 @@
+#######################################
+# Author: Helena Masłowska
+# 30.07.2022
+
 from PIL import Image, ImageOps
 from PIL.ImageQt import ImageQt
 import sys
@@ -13,6 +17,10 @@ FILEBROWSER_PATH = os.path.join(os.getenv('WINDIR'), 'explorer.exe')
 width = 1000
 height = 800
 
+# pyside2-uic mainwindow.ui -o mainwindow.py
+
+
+
 # if hasattr(Qt, 'AA_EnableHighDpiScaling'):
 #     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
 
@@ -20,6 +28,12 @@ height = 800
 #     QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
 class MainWindow(QMainWindow):
 	def __init__(self) -> None:
+		'''
+		pixmap: idk
+		image: image which is saved in RAM but not in folder on computer
+		curr_image: image which is shown on the screen and will be edited
+		filename: where the original photo is, it is used to open a photo
+		'''
 		super(MainWindow, self).__init__()
 		self.ui = Ui_MainWindow()
 		self.ui.setupUi(self)
@@ -32,7 +46,16 @@ class MainWindow(QMainWindow):
 	def set_functions(self):
 		self.ui.add_img_btn.clicked.connect(self.add_photo)
 		self.ui.save_as_btn.clicked.connect(self.save_as)
+
 		self.ui.color_chbox.clicked.connect(self.set_minmax_color)
+		self.ui.color_slider.valueChanged.connect(self.change_color_spinbox)
+		self.ui.color_spinbox.valueChanged.connect(self.change_color_slider)
+
+		self.ui.light_slider.valueChanged.connect(self.change_light_spinbox)
+		self.ui.light_spinbox.valueChanged.connect(self.change_light_slider)
+
+		self.ui.dark_slider.valueChanged.connect(self.change_dark_spinbox)
+		self.ui.dark_spinbox.valueChanged.connect(self.change_dark_slider)
 
 	def scale(self, pixmap: QPixmap):
 		'''
@@ -52,7 +75,7 @@ class MainWindow(QMainWindow):
 		add
 		"""
 		data = image.tobytes("raw", "RGBA") 
-		img = QImage(data, image.width, image.height, QImage.Format_ARGB32) 
+		img = QImage(data, image.width, image.height, QImage.Format_RGBA64) 
 		pix = QPixmap.fromImage(img) 
 		pix = self.scale(pix)
 		return pix
@@ -96,13 +119,13 @@ class MainWindow(QMainWindow):
 			image = ImageOps.grayscale(image).convert("RGBA")
 			self.pixmap = self.img_to_pix(image)
 			
-						# for x in range(50):
-						# 	for y in range(50):
+			# for x in range(50):
+			# 	for y in range(50):
 
-						# 		c = self.pixmap.pixel(x,y)
-						# 		avg = (c.getRed()*0.3 + c.getGreen()*0.6 + c.getBlue()*0.1)/3
-						# 		colors = QColor(c).getRgbF()
-						# 		print ("(%s,%s) = %s avg: %s" % (x, y, colors, avg))
+			# 		c = self.pixmap.pixel(x,y)
+			# 		avg = (c.getRed()*0.3 + c.getGreen()*0.6 + c.getBlue()*0.1)/3
+			# 		colors = QColor(c).getRgbF()
+			# 		print ("(%s,%s) = %s avg: %s" % (x, y, colors, avg))
 			self.ui.image_shower.setPixmap(self.pixmap)
 			self.ui.image_shower.repaint()
 		else:
@@ -110,10 +133,41 @@ class MainWindow(QMainWindow):
 			self.pixmap = self.img_to_pix(image)
 			self.ui.image_shower.setPixmap(self.pixmap)
 			self.ui.image_shower.repaint()
-			
 
-	def set_color(self):
-		return
+	def change_color_slider(self):
+		self.ui.color_slider.setValue(self.ui.color_spinbox.value())
+
+	def change_light_slider(self):
+		self.ui.light_slider.setValue(self.ui.light_spinbox.value())
+	
+	def change_dark_slider(self):
+		self.ui.dark_slider.setValue(self.ui.dark_spinbox.value())
+
+	def change_color_spinbox(self):
+		self.ui.color_spinbox.setValue(self.ui.color_slider.value())
+
+	def change_light_spinbox(self):
+		self.ui.light_spinbox.setValue(self.ui.light_slider.value())
+
+	def change_dark_spinbox(self):
+		self.ui.dark_spinbox.setValue(self.ui.dark_slider.value())
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+
+    window = MainWindow()
+    window.show()
+
+    sys.exit(app.exec_())
+
+
+
+
+
+
+###########################################
+### smieci - może coś się kiedyś przyda ###
 
 '''class Window(QMainWindow):
 
@@ -164,14 +218,6 @@ class MainWindow(QMainWindow):
 		self.label.resize(self.pixmap.width(), self.pixmap.height())
 		print("pressed")'''
 
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-
-    window = MainWindow()
-    window.show()
-
-    sys.exit(app.exec_())
 
 # def text_setup(window):
 # 	helloMsg = QLabel('<h1>Hello World!</h1>', parent=window)
