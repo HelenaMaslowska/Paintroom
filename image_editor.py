@@ -72,7 +72,7 @@ class MainWindow(QMainWindow):
 			pixmap = pixmap.scaledToHeight(h)
 		return pixmap
 	
-	def img_to_pix(self, image):
+	def img_to_pix(self, image):			#after greyscale
 		"""
 		important TODO
 		change this to normal form, dont be afraid to edit and crash everything, you can ctrl+z and you have previous versions, right?
@@ -84,7 +84,7 @@ class MainWindow(QMainWindow):
 		pix = self.scale(pix)
 		return pix
 
-	def img_to_pix_2(self, image):
+	def img_to_pix_2(self, image):			#bring back to color
 		"""
 		important TODO
 		change this to normal form, dont be afraid to edit and crash everything, you can ctrl+z and you have previous versions, right?
@@ -92,15 +92,13 @@ class MainWindow(QMainWindow):
 		#image = image.convert("RGB")
 		#data = image.tobytes("raw", "RGB") 
 		print('ok')
-		#img = QImage(data, image.width, image.height, QImage.Format_RGB32) 
-		# img = QImage(data, image.width, image.height, QImage.Format_A2BGR30_Premultiplied) 			#this thing change whole image into blue-pink-white image xd
 		image = QImage(str(self.filename))
 		pix = QPixmap.fromImage(image) 
 		pix = self.scale(pix)
 		return pix
 
 	def add_photo(self):
-		'''
+		'''	
 		add new photo to main screen and show it scaled on image_shower
 		'''
 		filename, filter = QFileDialog.getOpenFileName(
@@ -150,7 +148,7 @@ class MainWindow(QMainWindow):
 		else:
 			
 			if '.png' in self.type:
-				pixmap = self.img_to_pix(self.image)
+				pixmap = self.img_to_pix_2(self.image)
 			if '.jpg' in self.type:
 				print("im here")
 				pixmap = self.img_to_pix_2(self.image)
