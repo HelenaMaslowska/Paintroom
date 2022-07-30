@@ -18,6 +18,9 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(1156, 739)
+        icon = QIcon()
+        icon.addFile(u"b.png", QSize(), QIcon.Normal, QIcon.Off)
+        MainWindow.setWindowIcon(icon)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout = QHBoxLayout(self.centralwidget)
@@ -221,7 +224,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Paintroom", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"For transparent images", None))
         self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Transparency", None))
         self.white_radiobtn.setText(QCoreApplication.translate("MainWindow", u"white", None))

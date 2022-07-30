@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Paintroom</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>b.png</normaloff>b.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>

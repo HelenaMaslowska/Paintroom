@@ -7,7 +7,7 @@ from PIL.ImageQt import ImageQt			#read and change picture
 import sys
 import pathlib
 from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QGraphicsColorizeEffect		#show on the screen
-from PySide2.QtGui import QPixmap, QColor, QImage
+from PySide2.QtGui import QPixmap, QColor, QImage, QIcon
 from PySide2.QtCore import QFile , Qt
 
 import os
@@ -33,7 +33,8 @@ class MainWindow(QMainWindow):
 	def __init__(self) -> None:
 		'''
 		image: image which is saved in RAM but not in folder on computer
-		pixmap: image which is shown on the screen and will be edited
+		pixmap: image which is shown on the screen
+		curr_image: this image will be edited
 		filename: where the original photo is, it is used to open a photo
 		'''
 		super(MainWindow, self).__init__()
@@ -42,6 +43,7 @@ class MainWindow(QMainWindow):
 		self.set_functions()
 		self.pixmap = ''
 		self.image = ''
+		curr_image = ''
 		self.filename = ''
 		self.filetype = ''
 
@@ -82,6 +84,21 @@ class MainWindow(QMainWindow):
 		pix = self.scale(pix)
 		return pix
 
+	def img_to_pix_2(self, image):
+		"""
+		important TODO
+		change this to normal form, dont be afraid to edit and crash everything, you can ctrl+z and you have previous versions, right?
+		"""
+		#image = image.convert("RGB")
+		#data = image.tobytes("raw", "RGB") 
+		print('ok')
+		#img = QImage(data, image.width, image.height, QImage.Format_RGB32) 
+		# img = QImage(data, image.width, image.height, QImage.Format_A2BGR30_Premultiplied) 			#this thing change whole image into blue-pink-white image xd
+		image = QImage(str(self.filename))
+		pix = QPixmap.fromImage(image) 
+		pix = self.scale(pix)
+		return pix
+
 	def add_photo(self):
 		'''
 		add new photo to main screen and show it scaled on image_shower
@@ -92,6 +109,7 @@ class MainWindow(QMainWindow):
 		self.filename = filename
 		if pixmap2.size():
 			pixmap2 = self.scale(pixmap2)
+			self.image = Image.open(self.filename)
 			self.pixmap = pixmap2 
 			self.type = pathlib.Path(self.filename).suffixes
 			print(self.type, self.pixmap.size())
@@ -111,25 +129,33 @@ class MainWindow(QMainWindow):
 		'''TODO
 		Set max or min when this is checked or unchecked
 		Set color here
+
+		#color = QGraphicsColorizeEffect(self)		
+		# 	c = self.pixmap.pixel(x,y)
+		# 	avg = (c.getRed()*0.3 + c.getGreen()*0.6 + c.getBlue()*0.1)/3
+		# 	colors = QColor(c).getRgbF()
+		# 	print ("(%s,%s) = %s avg: %s" % (x, y, colors, avg))		
 		'''
-		#color = QGraphicsColorizeEffect(self)
-		image = Image.open(self.filename)
+
+		self.image = Image.open(self.filename)
+		self.curr_image = Image.open(self.filename)
+		pixmap = ''
 		if not self.ui.color_chbox.isChecked():
-			print("", self.ui.color_chbox.isChecked())
-			if '.png' in self.type:		#działa
-				image = ImageOps.grayscale(image).convert("RGBA")
-				self.pixmap = self.img_to_pix(image)
-			if '.jpg' in self.type:		#nie dziala
-				image = ImageOps.grayscale(image).convert("RGBA")
-				self.pixmap = self.img_to_pix(image)
-			
-			# 	c = self.pixmap.pixel(x,y)
-			# 	avg = (c.getRed()*0.3 + c.getGreen()*0.6 + c.getBlue()*0.1)/3
-			# 	colors = QColor(c).getRgbF()
-			# 	print ("(%s,%s) = %s avg: %s" % (x, y, colors, avg))
+			if '.png' in self.type:		# nie działa
+				self.curr_image = ImageOps.grayscale(self.curr_image).convert("RGBA")
+				pixmap = self.img_to_pix(self.curr_image)
+			if '.jpg' in self.type:		#dziala!!!
+				self.curr_image = ImageOps.grayscale(self.curr_image).convert("RGBA")
+				pixmap = self.img_to_pix(self.curr_image)
 		else:
-			print("im here")
-			self.pixmap = self.img_to_pix(image)
+			
+			if '.png' in self.type:
+				pixmap = self.img_to_pix(self.image)
+			if '.jpg' in self.type:
+				print("im here")
+				pixmap = self.img_to_pix_2(self.image)
+		
+		self.pixmap = pixmap
 		self.ui.image_shower.setPixmap(self.pixmap)
 		self.ui.image_shower.repaint()
 
@@ -153,12 +179,10 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-
-    window = MainWindow()
-    window.show()
-
-    sys.exit(app.exec_())
+	app = QApplication(sys.argv)
+	window = MainWindow()
+	window.show()
+	sys.exit(app.exec_())
 
 
 
