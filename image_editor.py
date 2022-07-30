@@ -48,7 +48,7 @@ class MainWindow(QMainWindow):
 		self.ui.add_img_btn.clicked.connect(self.add_photo)
 		self.ui.save_as_btn.clicked.connect(self.save_as)
 
-		self.ui.color_chbox.clicked.connect(self.set_minmax_color)
+		self.ui.color_chbox.clicked.connect(self.set_color_checkbox)
 		self.ui.color_slider.valueChanged.connect(self.change_color_spinbox)
 		self.ui.color_spinbox.valueChanged.connect(self.change_color_slider)
 
@@ -93,7 +93,7 @@ class MainWindow(QMainWindow):
 		if pixmap2.size():
 			pixmap2 = self.scale(pixmap2)
 			self.pixmap = pixmap2 
-			self.type = pathlib.Path(self.filename).suffix
+			self.type = pathlib.Path(self.filename).suffixes
 			print(self.type, self.pixmap.size())
 		self.ui.image_shower.setPixmap(self.pixmap)
 		self.ui.image_shower.repaint()
@@ -107,7 +107,7 @@ class MainWindow(QMainWindow):
 		filepath = QFileDialog.getOpenFileName(self, 'Hey! Select a File')
 		self.pixmap.save(self.pixmap)
 
-	def set_minmax_color(self):
+	def set_color_checkbox(self):
 		'''TODO
 			Set max or min when this is checked or unchecked
 			Set color here
@@ -118,9 +118,12 @@ class MainWindow(QMainWindow):
 			#color = QGraphicsColorizeEffect(self)
 			#color.setColor(QColor(0, 50, 192))
 			#self.pixmap.setGraphicsEffect(color)
-
-			image = ImageOps.grayscale(image).convert("RGBA")
-			self.pixmap = self.img_to_pix(image)
+			if '.png' in self.type:		#działa
+				image = ImageOps.grayscale(image).convert("RGBA")
+				self.pixmap = self.img_to_pix(image)
+			if '.jpg' in self.type:		#nie dziala
+				image = ImageOps.grayscale(image).convert("RGBA")
+				self.pixmap = self.img_to_pix(image)
 			
 			# for x in range(50):
 			# 	for y in range(50):
