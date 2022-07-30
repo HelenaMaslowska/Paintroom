@@ -5,7 +5,8 @@
 from PIL import Image, ImageOps
 from PIL.ImageQt import ImageQt
 import sys
-from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QGraphicsColorizeEffect
+import pathlib
+from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QGraphicsColorizeEffect		#show on the screen
 from PySide2.QtGui import QPixmap, QColor, QImage
 from PySide2.QtCore import QFile , Qt
 
@@ -19,7 +20,8 @@ height = 800
 
 # pyside2-uic mainwindow.ui -o mainwindow.py
 
-
+# pixmap - tylko i wylacznie wyswietlanie obrazków
+# qt - czyta i zapisuje obrazki
 
 # if hasattr(Qt, 'AA_EnableHighDpiScaling'):
 #     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
@@ -29,9 +31,8 @@ height = 800
 class MainWindow(QMainWindow):
 	def __init__(self) -> None:
 		'''
-		pixmap: idk
 		image: image which is saved in RAM but not in folder on computer
-		curr_image: image which is shown on the screen and will be edited
+		pixmap: image which is shown on the screen and will be edited
 		filename: where the original photo is, it is used to open a photo
 		'''
 		super(MainWindow, self).__init__()
@@ -40,8 +41,8 @@ class MainWindow(QMainWindow):
 		self.set_functions()
 		self.pixmap = ''
 		self.image = ''
-		self.curr_image = ''
 		self.filename = ''
+		self.filetype = ''
 
 	def set_functions(self):
 		self.ui.add_img_btn.clicked.connect(self.add_photo)
@@ -59,7 +60,7 @@ class MainWindow(QMainWindow):
 
 	def scale(self, pixmap: QPixmap):
 		'''
-		Scale Pixmap
+		Scale pixmap
 		'''
 		w, h = self.ui.image_shower.width(), self.ui.image_shower.height()
 		if (pixmap.width() >= w):
@@ -75,14 +76,15 @@ class MainWindow(QMainWindow):
 		add
 		"""
 		data = image.tobytes("raw", "RGBA") 
-		img = QImage(data, image.width, image.height, QImage.Format_RGBA64) 
+		img = QImage(data, image.width, image.height, QImage.Format_ARGB32) 
+		# img = QImage(data, image.width, image.height, QImage.Format_A2BGR30_Premultiplied) 			#this thing change whole image into blue-pink-white image xd
 		pix = QPixmap.fromImage(img) 
 		pix = self.scale(pix)
 		return pix
 
 	def add_photo(self):
 		'''
-			Add new photo to main screen and show it (image_shower).
+			Add new photo to main screen and show it scaled on image_shower.
 		'''
 		filename, filter = QFileDialog.getOpenFileName(
 			parent=self, caption='Open file', filter="Image files (*.png *.jpg)")
@@ -90,14 +92,17 @@ class MainWindow(QMainWindow):
 		self.filename = filename
 		if pixmap2.size():
 			pixmap2 = self.scale(pixmap2)
-			self.pixmap = pixmap2
-			print(self.pixmap.size())
+			self.pixmap = pixmap2 
+			self.type = pathlib.Path(self.filename).suffix
+			print(self.type, self.pixmap.size())
 		self.ui.image_shower.setPixmap(self.pixmap)
 		self.ui.image_shower.repaint()
 
 	def save_as(self):			
 		'''TODO
 			IT DOESN'T WORK YET xd
+
+			change type to self.type
 		'''
 		filepath = QFileDialog.getOpenFileName(self, 'Hey! Select a File')
 		self.pixmap.save(self.pixmap)
@@ -107,9 +112,7 @@ class MainWindow(QMainWindow):
 			Set max or min when this is checked or unchecked
 			Set color here
 		'''
-
 		image = Image.open(self.filename)
-
 		if not self.ui.color_chbox.isChecked():
 			print("", self.ui.color_chbox.isChecked())
 			#color = QGraphicsColorizeEffect(self)
@@ -126,20 +129,18 @@ class MainWindow(QMainWindow):
 			# 		avg = (c.getRed()*0.3 + c.getGreen()*0.6 + c.getBlue()*0.1)/3
 			# 		colors = QColor(c).getRgbF()
 			# 		print ("(%s,%s) = %s avg: %s" % (x, y, colors, avg))
-			self.ui.image_shower.setPixmap(self.pixmap)
-			self.ui.image_shower.repaint()
 		else:
 			print("im here")
 			self.pixmap = self.img_to_pix(image)
-			self.ui.image_shower.setPixmap(self.pixmap)
-			self.ui.image_shower.repaint()
+		self.ui.image_shower.setPixmap(self.pixmap)
+		self.ui.image_shower.repaint()
 
 	def change_color_slider(self):
 		self.ui.color_slider.setValue(self.ui.color_spinbox.value())
 
 	def change_light_slider(self):
 		self.ui.light_slider.setValue(self.ui.light_spinbox.value())
-	
+
 	def change_dark_slider(self):
 		self.ui.dark_slider.setValue(self.ui.dark_spinbox.value())
 
