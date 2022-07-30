@@ -30,6 +30,7 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Settings.sizePolicy().hasHeightForWidth())
         self.Settings.setSizePolicy(sizePolicy)
+        self.Settings.setMinimumSize(QSize(200, 0))
         self.Settings.setMaximumSize(QSize(200, 16777215))
         self.page = QWidget()
         self.page.setObjectName(u"page")
@@ -49,6 +50,7 @@ class Ui_MainWindow(object):
 
         self.white_radiobtn = QRadioButton(self.groupBox_3)
         self.white_radiobtn.setObjectName(u"white_radiobtn")
+        self.white_radiobtn.setChecked(True)
 
         self.verticalLayout.addWidget(self.white_radiobtn)
 

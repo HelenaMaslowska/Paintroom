@@ -3,7 +3,7 @@
 # 30.07.2022
 
 from PIL import Image, ImageOps
-from PIL.ImageQt import ImageQt
+from PIL.ImageQt import ImageQt			#read and change picture
 import sys
 import pathlib
 from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QGraphicsColorizeEffect		#show on the screen
@@ -22,13 +22,14 @@ height = 800
 
 # pixmap - tylko i wylacznie wyswietlanie obrazków
 # qt - czyta i zapisuje obrazki
+# pil - obrobka obrazu
 
-# if hasattr(Qt, 'AA_EnableHighDpiScaling'):
-#     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
-
-# if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
-#     QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
 class MainWindow(QMainWindow):
+	"""
+	TODO
+	Understand which path image is edited
+	Fix jpg and png bug
+	"""
 	def __init__(self) -> None:
 		'''
 		image: image which is saved in RAM but not in folder on computer
@@ -67,13 +68,12 @@ class MainWindow(QMainWindow):
 			pixmap = pixmap.scaledToWidth(w)
 		if (pixmap.height() >= h):
 			pixmap = pixmap.scaledToHeight(h)
-		# print(pixmap.width(), pixmap.height())
 		return pixmap
 	
 	def img_to_pix(self, image):
 		"""
 		important TODO
-		add
+		change this to normal form, dont be afraid to edit and crash everything, you can ctrl+z and you have previous versions, right?
 		"""
 		data = image.tobytes("raw", "RGBA") 
 		img = QImage(data, image.width, image.height, QImage.Format_ARGB32) 
@@ -84,7 +84,7 @@ class MainWindow(QMainWindow):
 
 	def add_photo(self):
 		'''
-			Add new photo to main screen and show it scaled on image_shower.
+		add new photo to main screen and show it scaled on image_shower
 		'''
 		filename, filter = QFileDialog.getOpenFileName(
 			parent=self, caption='Open file', filter="Image files (*.png *.jpg)")
@@ -100,24 +100,22 @@ class MainWindow(QMainWindow):
 
 	def save_as(self):			
 		'''TODO
-			IT DOESN'T WORK YET xd
-
-			change type to self.type
+		IT DOESN'T WORK YET xd
+		
+		change type to self.type
 		'''
 		filepath = QFileDialog.getOpenFileName(self, 'Hey! Select a File')
 		self.pixmap.save(self.pixmap)
 
 	def set_color_checkbox(self):
 		'''TODO
-			Set max or min when this is checked or unchecked
-			Set color here
+		Set max or min when this is checked or unchecked
+		Set color here
 		'''
+		#color = QGraphicsColorizeEffect(self)
 		image = Image.open(self.filename)
 		if not self.ui.color_chbox.isChecked():
 			print("", self.ui.color_chbox.isChecked())
-			#color = QGraphicsColorizeEffect(self)
-			#color.setColor(QColor(0, 50, 192))
-			#self.pixmap.setGraphicsEffect(color)
 			if '.png' in self.type:		#działa
 				image = ImageOps.grayscale(image).convert("RGBA")
 				self.pixmap = self.img_to_pix(image)
@@ -125,13 +123,10 @@ class MainWindow(QMainWindow):
 				image = ImageOps.grayscale(image).convert("RGBA")
 				self.pixmap = self.img_to_pix(image)
 			
-			# for x in range(50):
-			# 	for y in range(50):
-
-			# 		c = self.pixmap.pixel(x,y)
-			# 		avg = (c.getRed()*0.3 + c.getGreen()*0.6 + c.getBlue()*0.1)/3
-			# 		colors = QColor(c).getRgbF()
-			# 		print ("(%s,%s) = %s avg: %s" % (x, y, colors, avg))
+			# 	c = self.pixmap.pixel(x,y)
+			# 	avg = (c.getRed()*0.3 + c.getGreen()*0.6 + c.getBlue()*0.1)/3
+			# 	colors = QColor(c).getRgbF()
+			# 	print ("(%s,%s) = %s avg: %s" % (x, y, colors, avg))
 		else:
 			print("im here")
 			self.pixmap = self.img_to_pix(image)
