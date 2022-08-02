@@ -6,12 +6,15 @@ from PIL import Image, ImageOps
 from PIL.ImageQt import ImageQt			#read and change picture
 import sys
 import pathlib
-from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QGraphicsColorizeEffect		#show on the screen
+import tempfile
+from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog		#show on the screen
 from PySide2.QtGui import QPixmap, QColor, QImage, QIcon
 from PySide2.QtCore import QFile , Qt
 
 import os
 import subprocess
+
+from numpy import apply_along_axis
 from mainwindow import Ui_MainWindow
 FILEBROWSER_PATH = os.path.join(os.getenv('WINDIR'), 'explorer.exe')
 
@@ -32,9 +35,9 @@ class MainWindow(QMainWindow):
 	"""
 	def __init__(self) -> None:
 		'''
-		image: image which is saved in RAM but not in folder on computer
 		pixmap: image which is shown on the screen
 		curr_image: this image will be edited
+		image: image which is saved in RAM but not in folder on computer
 		filename: where the original photo is, it is used to open a photo
 		'''
 		super(MainWindow, self).__init__()
@@ -43,13 +46,17 @@ class MainWindow(QMainWindow):
 		self.set_functions()
 		self.pixmap = ''
 		self.image = ''
-		curr_image = ''
+		self.curr_image = ''
 		self.filename = ''
+		self.filename_temp = ''
 		self.filetype = ''
+		self.last_apply = ''
 
 	def set_functions(self):
+		#buttons
 		self.ui.add_img_btn.clicked.connect(self.add_photo)
 		self.ui.save_as_btn.clicked.connect(self.save_as)
+		self.ui.apply_btn.clicked.connect(self.apply)
 
 		self.ui.color_chbox.clicked.connect(self.set_color_checkbox)
 		self.ui.color_slider.valueChanged.connect(self.change_color_spinbox)
@@ -61,10 +68,10 @@ class MainWindow(QMainWindow):
 		self.ui.dark_slider.valueChanged.connect(self.change_dark_spinbox)
 		self.ui.dark_spinbox.valueChanged.connect(self.change_dark_slider)
 
+
+
 	def scale(self, pixmap: QPixmap):
-		'''
-		Scale pixmap
-		'''
+		''' scale pixmap '''
 		w, h = self.ui.image_shower.width(), self.ui.image_shower.height()
 		if (pixmap.width() >= w):
 			pixmap = pixmap.scaledToWidth(w)
@@ -72,11 +79,8 @@ class MainWindow(QMainWindow):
 			pixmap = pixmap.scaledToHeight(h)
 		return pixmap
 	
-	def img_to_pix(self, image):			#after greyscale
-		"""
-		important TODO
-		change this to normal form, dont be afraid to edit and crash everything, you can ctrl+z and you have previous versions, right?
-		"""
+	def img_to_pix(self, image: Image):			#after greyscale
+		''' convert from Image type to pixmap '''
 		data = image.tobytes("raw", "RGBA") 
 		img = QImage(data, image.width, image.height, QImage.Format_ARGB32) 
 		# img = QImage(data, image.width, image.height, QImage.Format_A2BGR30_Premultiplied) 			#this thing change whole image into blue-pink-white image xd
@@ -84,23 +88,33 @@ class MainWindow(QMainWindow):
 		pix = self.scale(pix)
 		return pix
 
-	def img_to_pix_2(self, image):			#bring back to color
-		"""
-		important TODO
-		change this to normal form, dont be afraid to edit and crash everything, you can ctrl+z and you have previous versions, right?
-		"""
-		#image = image.convert("RGB")
-		#data = image.tobytes("raw", "RGB") 
-		print('ok')
+	def img_to_pix_2(self, image: Image):			#bring back to color
+		''' convert from Image type to pixmap '''
 		image = QImage(str(self.filename))
 		pix = QPixmap.fromImage(image) 
 		pix = self.scale(pix)
 		return pix
 
+	def update_image(self):
+		self.ui.image_shower.setPixmap(self.pixmap)
+		self.ui.image_shower.repaint()
+
+	def apply(self):
+		self.image = self.curr_image	
+		# with open(self.filename_temp, "r+") as f:
+		# 	data = f.read()
+		# 	self.last_apply = data
+		# 	f.seek(0)
+		# 	f.write(self.image)
+		# 	f.truncate()
+		print("applied!")
+		print(self.curr_image)
+		print(self.image)
+		self.update_image()
+
+
 	def add_photo(self):
-		'''	
-		add new photo to main screen and show it scaled on image_shower
-		'''
+		''' add/replace new photo to main screen and show it scaled on image_shower '''
 		filename, filter = QFileDialog.getOpenFileName(
 			parent=self, caption='Open file', filter="Image files (*.png *.jpg)")
 		pixmap2 = QPixmap(filename)
@@ -108,54 +122,40 @@ class MainWindow(QMainWindow):
 		if pixmap2.size():
 			pixmap2 = self.scale(pixmap2)
 			self.image = Image.open(self.filename)
+			self.curr_image = self.image
 			self.pixmap = pixmap2 
-			self.type = pathlib.Path(self.filename).suffixes
-			print(self.type, self.pixmap.size())
-		self.ui.image_shower.setPixmap(self.pixmap)
-		self.ui.image_shower.repaint()
+			self.filetype = pathlib.Path(self.filename).suffixes
+			print(self.filetype, self.pixmap.size())
+		#print(self.filename[:self.filename.length()-self.filetype.length()])
+		#self.filename_temp = self.filename 
+		self.update_image()
 
 	def save_as(self):			
 		'''TODO
 		IT DOESN'T WORK YET xd
-		
 		change type to self.type
 		'''
 		filepath = QFileDialog.getOpenFileName(self, 'Hey! Select a File')
 		self.pixmap.save(self.pixmap)
 
 	def set_color_checkbox(self):
-		'''TODO
-		Set max or min when this is checked or unchecked
-		Set color here
-
-		#color = QGraphicsColorizeEffect(self)		
-		# 	c = self.pixmap.pixel(x,y)
-		# 	avg = (c.getRed()*0.3 + c.getGreen()*0.6 + c.getBlue()*0.1)/3
-		# 	colors = QColor(c).getRgbF()
-		# 	print ("(%s,%s) = %s avg: %s" % (x, y, colors, avg))		
-		'''
-
-		self.image = Image.open(self.filename)
-		self.curr_image = Image.open(self.filename)
+		''' set max or min when this is checked or unchecked '''
+		self.curr_image = self.image
 		pixmap = ''
 		if not self.ui.color_chbox.isChecked():
-			if '.png' in self.type:		# nie działa
-				self.curr_image = ImageOps.grayscale(self.curr_image).convert("RGBA")
-				pixmap = self.img_to_pix(self.curr_image)
-			if '.jpg' in self.type:		#dziala!!!
-				self.curr_image = ImageOps.grayscale(self.curr_image).convert("RGBA")
-				pixmap = self.img_to_pix(self.curr_image)
+			self.curr_image = ImageOps.grayscale(self.curr_image).convert("RGBA")
+			print( 'curr', self.curr_image)
+			print( 'img', self.image)
+			pixmap = self.img_to_pix(self.curr_image)
 		else:
-			
-			if '.png' in self.type:
-				pixmap = self.img_to_pix_2(self.image)
-			if '.jpg' in self.type:
-				print("im here")
-				pixmap = self.img_to_pix_2(self.image)
-		
+			print( 'curr2', self.curr_image)
+			print( 'img2', self.image)			
+			pixmap = self.img_to_pix_2(self.curr_image)
+		# print('before')
+		# print(self.curr_image)
+		# print(self.image)
 		self.pixmap = pixmap
-		self.ui.image_shower.setPixmap(self.pixmap)
-		self.ui.image_shower.repaint()
+		self.update_image()
 
 	def change_color_slider(self):
 		self.ui.color_slider.setValue(self.ui.color_spinbox.value())
@@ -189,6 +189,13 @@ if __name__ == "__main__":
 
 ###########################################
 ### smieci - może coś się kiedyś przyda ###
+
+
+#color = QGraphicsColorizeEffect(self)		#library QWidgets QGraphicsColorizeEffect
+# 	c = self.pixmap.pixel(x,y)
+# 	avg = (c.getRed()*0.3 + c.getGreen()*0.6 + c.getBlue()*0.1)/3
+# 	colors = QColor(c).getRgbF()
+# 	print ("(%s,%s) = %s avg: %s" % (x, y, colors, avg))
 
 '''class Window(QMainWindow):
 
