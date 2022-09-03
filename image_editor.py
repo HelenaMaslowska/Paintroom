@@ -26,7 +26,7 @@ height = 800
 # pixmap - tylko i wylacznie wyswietlanie obrazków
 # qt - czyta i zapisuje obrazki
 # pil - obrobka obrazu
-
+# self.ui - wszystkie rzeczy związane z plikiem mainwindow
 class MainWindow(QMainWindow):
 	"""
 	TODO
@@ -67,7 +67,6 @@ class MainWindow(QMainWindow):
 
 		self.ui.dark_slider.valueChanged.connect(self.change_dark_spinbox)
 		self.ui.dark_spinbox.valueChanged.connect(self.change_dark_slider)
-
 
 
 	def scale(self, pixmap: QPixmap):
