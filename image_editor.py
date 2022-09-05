@@ -45,7 +45,7 @@ class MainWindow(QMainWindow):
 		self.ui.setupUi(self)
 		self.set_functions()
 		self.pixmap = ''
-		self.image = ''
+		self.image = ''				#saved but not showed, bring back save pick from apply/start
 		self.curr_image = ''
 		self.filename = ''
 		self.filename_temp = ''
@@ -87,10 +87,10 @@ class MainWindow(QMainWindow):
 		pix = self.scale(pix)
 		return pix
 
-	def img_to_pix_2(self, image: Image):			#bring back to color
+	def img_to_pix_2(self):			#bring back to color
 		''' convert from Image type to pixmap '''
-		image = QImage(str(self.filename))
-		pix = QPixmap.fromImage(image) 
+		img = QImage(str(self.filename))
+		pix = QPixmap.fromImage(img) 
 		pix = self.scale(pix)
 		return pix
 
@@ -100,12 +100,6 @@ class MainWindow(QMainWindow):
 
 	def apply(self):
 		self.image = self.curr_image	
-		# with open(self.filename_temp, "r+") as f:
-		# 	data = f.read()
-		# 	self.last_apply = data
-		# 	f.seek(0)
-		# 	f.write(self.image)
-		# 	f.truncate()
 		print("applied!")
 		print(self.curr_image)
 		print(self.image)
@@ -141,16 +135,23 @@ class MainWindow(QMainWindow):
 	def set_color_checkbox(self):
 		''' set max or min when this is checked or unchecked '''
 		#self.curr_image = self.image
+		if self.filename == '':
+			return 
+		
 		pixmap = ''
 		if not self.ui.color_chbox.isChecked():
-			self.curr_image = ImageOps.grayscale(self.curr_image).convert("RGBA")
-			print( 'aktualny obrazek', self.curr_image)
-			print( 'obrazek w pamięci', self.image)
+			self.ui.color_slider.setValue(0)					#hardcoded, change this later	
+			self.curr_image = ImageOps.grayscale(self.image).convert("RGBA")
+			# print( 'szary aktualny obrazek', self.curr_image)
+			# print( 'obrazek w pamięci', self.image)
 			pixmap = self.img_to_pix(self.curr_image)
 		else:
-			print( 'aktualny obrazek z przywróconym kolorem', self.curr_image)
-			print( 'zapisany obrazek', self.image)			
-			pixmap = self.img_to_pix_2(self.curr_image)
+			#print("max:", self.ui.color_slider.maximum)
+			self.ui.color_slider.setValue(100)					#hardcoded, change this later
+			# print( 'kolor aktualny obrazek', self.curr_image)
+			# print( 'zapisany obrazek', self.image)			
+			pixmap = self.img_to_pix_2()
+		self.change_color_spinbox()
 		# print('before')
 		# print(self.curr_image)
 		# print(self.image)

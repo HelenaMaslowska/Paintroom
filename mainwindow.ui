@@ -43,7 +43,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page">
        <property name="geometry">
@@ -295,7 +295,7 @@
           <enum>Qt::Vertical</enum>
          </property>
         </widget>
-        <widget class="QSlider" name="dark_slider">
+        <widget class="QSlider" name="contrast_slider">
          <property name="geometry">
           <rect>
            <x>130</x>
@@ -343,7 +343,7 @@
           <number>50</number>
          </property>
         </widget>
-        <widget class="QSpinBox" name="dark_spinbox">
+        <widget class="QSpinBox" name="contrast_spinbox">
          <property name="geometry">
           <rect>
            <x>120</x>
@@ -391,17 +391,17 @@
           <set>Qt::AlignCenter</set>
          </property>
         </widget>
-        <widget class="QLabel" name="dark_label">
+        <widget class="QLabel" name="contrast_label">
          <property name="geometry">
           <rect>
-           <x>120</x>
+           <x>110</x>
            <y>30</y>
-           <width>41</width>
+           <width>61</width>
            <height>20</height>
           </rect>
          </property>
          <property name="text">
-          <string>Dark</string>
+          <string>Contrast</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -454,7 +454,7 @@
           <string>CheckBox</string>
          </property>
         </widget>
-        <widget class="QCheckBox" name="dark_chbox">
+        <widget class="QCheckBox" name="contrast_chbox">
          <property name="enabled">
           <bool>true</bool>
          </property>
