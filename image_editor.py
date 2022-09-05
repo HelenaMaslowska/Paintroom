@@ -49,7 +49,7 @@ class MainWindow(QMainWindow):
 		self.curr_image = ''
 		self.filename = ''
 		self.filename_temp = ''
-		self.filetype = ''
+		self.filetype = ''			# show the type of file, e.g. ['.jpg']
 		self.last_apply = ''
 
 	def set_functions(self):
@@ -65,8 +65,8 @@ class MainWindow(QMainWindow):
 		self.ui.light_slider.valueChanged.connect(self.change_light_spinbox)
 		self.ui.light_spinbox.valueChanged.connect(self.change_light_slider)
 
-		self.ui.dark_slider.valueChanged.connect(self.change_dark_spinbox)
-		self.ui.dark_spinbox.valueChanged.connect(self.change_dark_slider)
+		self.ui.contrast_slider.valueChanged.connect(self.change_contrast_spinbox)
+		self.ui.contrast_spinbox.valueChanged.connect(self.change_contrast_slider)		#w qtcreator zminić nazwe sliderów 
 
 
 	def scale(self, pixmap: QPixmap):
@@ -116,14 +116,15 @@ class MainWindow(QMainWindow):
 		''' add/replace new photo to main screen and show it scaled on image_shower '''
 		filename, filter = QFileDialog.getOpenFileName(
 			parent=self, caption='Open file', filter="Image files (*.png *.jpg)")
-		pixmap2 = QPixmap(filename)
-		self.filename = filename
-		if pixmap2.size():
-			pixmap2 = self.scale(pixmap2)
+		self.filename = filename	
+		pixmap1 = QPixmap(filename)
+		
+		if pixmap1.size():
+			pixmap1 = self.scale(pixmap1)
 			self.image = Image.open(self.filename)
 			self.curr_image = self.image
-			self.pixmap = pixmap2 
-			self.filetype = pathlib.Path(self.filename).suffixes
+			self.pixmap = pixmap1 
+			self.filetype = pathlib.Path(self.filename).suffixes			# for show type only
 			print(self.filetype, self.pixmap.size())
 		#print(self.filename[:self.filename.length()-self.filetype.length()])
 		#self.filename_temp = self.filename 
@@ -139,16 +140,16 @@ class MainWindow(QMainWindow):
 
 	def set_color_checkbox(self):
 		''' set max or min when this is checked or unchecked '''
-		self.curr_image = self.image
+		#self.curr_image = self.image
 		pixmap = ''
 		if not self.ui.color_chbox.isChecked():
 			self.curr_image = ImageOps.grayscale(self.curr_image).convert("RGBA")
-			print( 'curr', self.curr_image)
-			print( 'img', self.image)
+			print( 'aktualny obrazek', self.curr_image)
+			print( 'obrazek w pamięci', self.image)
 			pixmap = self.img_to_pix(self.curr_image)
 		else:
-			print( 'curr2', self.curr_image)
-			print( 'img2', self.image)			
+			print( 'aktualny obrazek z przywróconym kolorem', self.curr_image)
+			print( 'zapisany obrazek', self.image)			
 			pixmap = self.img_to_pix_2(self.curr_image)
 		# print('before')
 		# print(self.curr_image)
@@ -162,8 +163,8 @@ class MainWindow(QMainWindow):
 	def change_light_slider(self):
 		self.ui.light_slider.setValue(self.ui.light_spinbox.value())
 
-	def change_dark_slider(self):
-		self.ui.dark_slider.setValue(self.ui.dark_spinbox.value())
+	def change_contrast_slider(self):
+		self.ui.contrast_slider.setValue(self.ui.contrast_spinbox.value())
 
 	def change_color_spinbox(self):
 		self.ui.color_spinbox.setValue(self.ui.color_slider.value())
@@ -171,8 +172,8 @@ class MainWindow(QMainWindow):
 	def change_light_spinbox(self):
 		self.ui.light_spinbox.setValue(self.ui.light_slider.value())
 
-	def change_dark_spinbox(self):
-		self.ui.dark_spinbox.setValue(self.ui.dark_slider.value())
+	def change_contrast_spinbox(self):
+		self.ui.contrast_spinbox.setValue(self.ui.contrast_slider.value())
 
 
 if __name__ == "__main__":
