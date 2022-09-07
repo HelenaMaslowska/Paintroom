@@ -44,12 +44,12 @@ class MainWindow(QMainWindow):
 		self.ui = Ui_MainWindow()
 		self.ui.setupUi(self)
 		self.set_functions()
-		self.pixmap = ''
-		self.image = ''				#saved but not showed, bring back save pick from apply/start
-		self.curr_image = ''
+		self.pixmap: QPixmap = None
+		self.image: Image = None				# saved but not showed, bring back save pick from apply/start
+		self.curr_image: Image = None		
 		self.filename = ''
 		self.filename_temp = ''
-		self.filetype = ''			# show the type of file, e.g. ['.jpg']
+		self.filetype = ''			# type of file, e.g. ['.jpg']
 		self.last_apply = ''
 
 	def set_functions(self):
@@ -66,8 +66,17 @@ class MainWindow(QMainWindow):
 		self.ui.light_spinbox.valueChanged.connect(self.change_light_slider)
 
 		self.ui.contrast_slider.valueChanged.connect(self.change_contrast_spinbox)
-		self.ui.contrast_spinbox.valueChanged.connect(self.change_contrast_slider)		#w qtcreator zminić nazwe sliderów 
+		self.ui.contrast_spinbox.valueChanged.connect(self.change_contrast_slider)
 
+	def save_temp_file(self):
+		self.filename_temp= 'paintroom_temp_image' + str(self.filetype[0])
+		print(self.filename_temp)
+		
+		try:
+			print(type(self.image), self.image)
+			self.image.save(self.filename_temp)
+		except IOError:
+			print("error", self.filename_temp)
 
 	def scale(self, pixmap: QPixmap):
 		''' scale pixmap '''
@@ -78,18 +87,14 @@ class MainWindow(QMainWindow):
 			pixmap = pixmap.scaledToHeight(h)
 		return pixmap
 	
-	def img_to_pix(self, image: Image):			#after greyscale
+	def img_to_pix(self, image: Image):
 		''' convert from Image type to pixmap '''
-		data = image.tobytes("raw", "RGBA") 
+		#data = image.tobytes("raw", "RGBA") 
+		r, g, b, a = image.split()
+		data = Image.merge('RGBA', (b, g, r, a)).tobytes("raw", "RGBA")
 		img = QImage(data, image.width, image.height, QImage.Format_ARGB32) 
-		# img = QImage(data, image.width, image.height, QImage.Format_A2BGR30_Premultiplied) 			#this thing change whole image into blue-pink-white image xd
-		pix = QPixmap.fromImage(img) 
-		pix = self.scale(pix)
-		return pix
 
-	def img_to_pix_2(self):			#bring back to color
-		''' convert from Image type to pixmap '''
-		img = QImage(str(self.filename))
+		# img = QImage(data, image.width, image.height, QImage.Format_A2BGR30_Premultiplied) 			#this thing change whole image into blue-pink-white image xd
 		pix = QPixmap.fromImage(img) 
 		pix = self.scale(pix)
 		return pix
@@ -99,10 +104,11 @@ class MainWindow(QMainWindow):
 		self.ui.image_shower.repaint()
 
 	def apply(self):
-		self.image = self.curr_image	
+		self.image = self.curr_image.copy()
 		print("applied!")
 		print(self.curr_image)
 		print(self.image)
+		self.save_temp_file()
 		self.update_image()
 
 
@@ -116,12 +122,10 @@ class MainWindow(QMainWindow):
 		if pixmap1.size():
 			pixmap1 = self.scale(pixmap1)
 			self.image = Image.open(self.filename)
-			self.curr_image = self.image
+			self.curr_image = self.image.copy()
 			self.pixmap = pixmap1 
-			self.filetype = pathlib.Path(self.filename).suffixes			# for show type only
+			self.filetype = pathlib.Path(self.filename).suffixes
 			print(self.filetype, self.pixmap.size())
-		#print(self.filename[:self.filename.length()-self.filetype.length()])
-		#self.filename_temp = self.filename 
 		self.update_image()
 
 	def save_as(self):			
@@ -138,25 +142,18 @@ class MainWindow(QMainWindow):
 		if self.filename == '':
 			return 
 		
-		pixmap = ''
+		#pixmap = ''
 		if not self.ui.color_chbox.isChecked():
-			self.ui.color_slider.setValue(0)					#hardcoded, change this later	
+			self.ui.color_slider.setValue(self.ui.color_slider.minimum())
 			self.curr_image = ImageOps.grayscale(self.image).convert("RGBA")
-			# print( 'szary aktualny obrazek', self.curr_image)
-			# print( 'obrazek w pamięci', self.image)
-			pixmap = self.img_to_pix(self.curr_image)
+			self.pixmap = self.img_to_pix(self.curr_image)
 		else:
 			#print("max:", self.ui.color_slider.maximum)
-			self.ui.color_slider.setValue(100)					#hardcoded, change this later
-			# print( 'kolor aktualny obrazek', self.curr_image)
-			# print( 'zapisany obrazek', self.image)			
-			pixmap = self.img_to_pix_2()
+			self.ui.color_slider.setValue(self.ui.color_slider.maximum())		
+			self.pixmap = self.img_to_pix(self.image.convert("RGBA"))
 		self.change_color_spinbox()
-		# print('before')
-		# print(self.curr_image)
-		# print(self.image)
-		self.pixmap = pixmap
 		self.update_image()
+
 
 	def change_color_slider(self):
 		self.ui.color_slider.setValue(self.ui.color_spinbox.value())
