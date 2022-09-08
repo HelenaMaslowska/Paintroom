@@ -57,7 +57,7 @@ class MainWindow(QMainWindow):
 		#buttons
 		self.ui.add_img_btn.clicked.connect(self.add_photo)
 		self.ui.save_as_btn.clicked.connect(self.save_as)
-		self.ui.tr
+		self.ui.transparency_btn.clicked.connect(self.setup_transparency)
 
 		self.ui.color_chbox.clicked.connect(self.set_color_checkbox)
 		self.ui.color_slider.valueChanged.connect(self.change_color_spinbox)
@@ -122,6 +122,14 @@ class MainWindow(QMainWindow):
 		self.save_temp_file()
 		self.update_image()
 
+	def save_as(self):			
+		'''TODO
+		IT DOESN'T WORK YET xd
+		change type to self.type
+		'''
+		filepath = QFileDialog.getOpenFileName(self, 'Hey! Select a File')
+		self.pixmap.save(self.pixmap)
+
 	def add_photo(self):
 		''' add/replace new photo to main screen and show it scaled on image_shower '''
 		filename, filter = QFileDialog.getOpenFileName(
@@ -137,13 +145,19 @@ class MainWindow(QMainWindow):
 			self.filetype = pathlib.Path(self.filename).suffixes
 		self.update_image()
 
-	def save_as(self):			
-		'''TODO
-		IT DOESN'T WORK YET xd
-		change type to self.type
-		'''
-		filepath = QFileDialog.getOpenFileName(self, 'Hey! Select a File')
-		self.pixmap.save(self.pixmap)
+	def setup_transparency(self):
+		if(self.ui.transparency_btn.isChecked()):
+			self.ui.transparency_btn.setChecked(True)
+			self.ui.white_radiobtn.setDisabled(True)
+			self.ui.black_radiobtn.setDisabled(True)
+			self.ui.stripped_radiobtn.setDisabled(True)
+			self.ui.squares_radiobtn.setDisabled(True)
+		else:
+			self.ui.transparency_btn.setChecked(False)
+			self.ui.white_radiobtn.setEnabled(True)
+			self.ui.black_radiobtn.setEnabled(True)
+			self.ui.stripped_radiobtn.setEnabled(True)
+			self.ui.squares_radiobtn.setEnabled(True)
 
 	def set_color_checkbox(self):
 		''' Greyscale/color on photo with color checkbox
