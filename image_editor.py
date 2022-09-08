@@ -2,7 +2,8 @@
 # Author: Helena Masłowska
 # 30.07.2022
 
-from PIL import Image, ImageOps
+from xml.dom.minicompat import EmptyNodeList
+from PIL import Image, ImageOps, ImageEnhance
 from PIL.ImageQt import ImageQt			#read and change picture
 import sys
 import pathlib
@@ -56,7 +57,7 @@ class MainWindow(QMainWindow):
 		#buttons
 		self.ui.add_img_btn.clicked.connect(self.add_photo)
 		self.ui.save_as_btn.clicked.connect(self.save_as)
-		self.ui.apply_btn.clicked.connect(self.apply)
+		self.ui.tr
 
 		self.ui.color_chbox.clicked.connect(self.set_color_checkbox)
 		self.ui.color_slider.valueChanged.connect(self.change_color_spinbox)
@@ -69,12 +70,15 @@ class MainWindow(QMainWindow):
 		self.ui.contrast_slider.valueChanged.connect(self.change_contrast_spinbox)
 		self.ui.contrast_spinbox.valueChanged.connect(self.change_contrast_slider)
 
+		self.ui.apply_btn.clicked.connect(self.apply)
+		self.ui.cancel_btn.clicked.connect(self.cancel)
+
 	def save_temp_file(self):
 		self.filename_temp= 'paintroom_temp_image' + str(self.filetype[0])
-		print(self.filename_temp)
-		
 		try:
 			print(type(self.image), self.image)
+			if(self.filetype[0] == '.jpg'):
+				self.image.convert("RGB").save(self.filename_temp)
 			self.image.save(self.filename_temp)
 		except IOError:
 			print("error", self.filename_temp)
@@ -90,11 +94,10 @@ class MainWindow(QMainWindow):
 	
 	def img_to_pix(self, image: Image):
 		''' convert from Image type to pixmap '''
-		#data = image.tobytes("raw", "RGBA") 
+		image = image.convert("RGBA")
 		r, g, b, a = image.split()
 		data = Image.merge('RGBA', (b, g, r, a)).tobytes("raw", "RGBA")
 		img = QImage(data, image.width, image.height, QImage.Format_ARGB32) 
-
 		# img = QImage(data, image.width, image.height, QImage.Format_A2BGR30_Premultiplied) 			#this thing change whole image into blue-pink-white image xd
 		pix = QPixmap.fromImage(img) 
 		pix = self.scale(pix)
@@ -112,6 +115,12 @@ class MainWindow(QMainWindow):
 		self.save_temp_file()
 		self.update_image()
 
+	def cancel(self):
+		self.curr_image = self.image.copy()
+		print("cancelled!")
+		self.pixmap = self.img_to_pix(self.curr_image)
+		self.save_temp_file()
+		self.update_image()
 
 	def add_photo(self):
 		''' add/replace new photo to main screen and show it scaled on image_shower '''
@@ -126,7 +135,6 @@ class MainWindow(QMainWindow):
 			self.curr_image = self.image.copy()
 			self.pixmap = pixmap1 
 			self.filetype = pathlib.Path(self.filename).suffixes
-			print(self.filetype, self.pixmap.size())
 		self.update_image()
 
 	def save_as(self):			
@@ -138,25 +146,35 @@ class MainWindow(QMainWindow):
 		self.pixmap.save(self.pixmap)
 
 	def set_color_checkbox(self):
-		''' set max or min when this is checked or unchecked '''
+		''' Greyscale/color on photo with color checkbox
+			return nothing'''
+
 		if self.filename == '':
 			return 
-		
+
 		if not self.ui.color_chbox.isChecked():
-			self.ui.color_slider.setValue(self.ui.color_slider.minimum())
 			self.curr_image = ImageOps.grayscale(self.image).convert("RGBA")
+			self.ui.color_slider.setValue(self.ui.color_slider.minimum())
 			self.pixmap = self.img_to_pix(self.curr_image)
 		else:
 			self.ui.color_slider.setValue(self.ui.color_slider.maximum())		
-			self.pixmap = self.img_to_pix(self.image.convert("RGBA"))
+			self.pixmap = self.img_to_pix(self.image)
 		self.change_color_spinbox()
 		self.update_image()
 
 	def set_contrast_checkbox(self):
-		if not self.ui.contrast_chbox.isChecked():
-			self.ui.contrast_slider.setValue(self.ui.contrast_slider.minimum())
+		if self.ui.contrast_chbox.isChecked():
+			enhancer = ImageEnhance.Contrast(self.curr_image)
+			factor = 10
+			self.curr_image = enhancer.enhance(factor)
+			self.ui.contrast_slider.setValue(self.ui.contrast_slider.maximum())
 		else:
-			self.ui.contrast_slider.setValue(self.ui.contrast_slider.maximum())		
+			enhancer = ImageEnhance.Contrast(self.curr_image)
+			factor = 0.1
+			self.curr_image = enhancer.enhance(factor)
+			self.ui.contrast_slider.setValue(self.ui.contrast_slider.minimum())		
+		
+		self.pixmap = self.img_to_pix(self.curr_image)
 		self.change_contrast_spinbox()
 		self.update_image()
 

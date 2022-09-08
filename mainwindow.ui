@@ -43,7 +43,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page">
        <property name="geometry">
@@ -74,7 +74,7 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="transparency_btn">
            <property name="text">
             <string>Transparency</string>
            </property>
@@ -486,7 +486,7 @@
        <widget class="QPushButton" name="apply_btn">
         <property name="geometry">
          <rect>
-          <x>100</x>
+          <x>10</x>
           <y>430</y>
           <width>91</width>
           <height>24</height>
@@ -494,6 +494,19 @@
         </property>
         <property name="text">
          <string>Apply</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="cancel_btn">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>430</y>
+          <width>75</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Cancel</string>
         </property>
        </widget>
       </widget>

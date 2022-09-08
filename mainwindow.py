@@ -44,12 +44,12 @@ class Ui_MainWindow(object):
         self.groupBox_3.setAlignment(Qt.AlignCenter)
         self.verticalLayout = QVBoxLayout(self.groupBox_3)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.pushButton = QPushButton(self.groupBox_3)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setCheckable(True)
-        self.pushButton.setChecked(False)
+        self.transparency_btn = QPushButton(self.groupBox_3)
+        self.transparency_btn.setObjectName(u"transparency_btn")
+        self.transparency_btn.setCheckable(True)
+        self.transparency_btn.setChecked(False)
 
-        self.verticalLayout.addWidget(self.pushButton)
+        self.verticalLayout.addWidget(self.transparency_btn)
 
         self.white_radiobtn = QRadioButton(self.groupBox_3)
         self.white_radiobtn.setObjectName(u"white_radiobtn")
@@ -201,7 +201,10 @@ class Ui_MainWindow(object):
         self.contrast_chbox.setAutoFillBackground(False)
         self.apply_btn = QPushButton(self.page_2)
         self.apply_btn.setObjectName(u"apply_btn")
-        self.apply_btn.setGeometry(QRect(100, 430, 91, 24))
+        self.apply_btn.setGeometry(QRect(10, 430, 91, 24))
+        self.cancel_btn = QPushButton(self.page_2)
+        self.cancel_btn.setObjectName(u"cancel_btn")
+        self.cancel_btn.setGeometry(QRect(110, 430, 75, 24))
         self.Settings.addItem(self.page_2, u"Options")
 
         self.horizontalLayout.addWidget(self.Settings)
@@ -219,7 +222,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.Settings.setCurrentIndex(1)
+        self.Settings.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -228,7 +231,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Paintroom", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"For transparent images", None))
-        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Transparency", None))
+        self.transparency_btn.setText(QCoreApplication.translate("MainWindow", u"Transparency", None))
         self.white_radiobtn.setText(QCoreApplication.translate("MainWindow", u"white", None))
         self.black_radiobtn.setText(QCoreApplication.translate("MainWindow", u"black", None))
         self.stripped_radiobtn.setText(QCoreApplication.translate("MainWindow", u"stripped", None))
@@ -251,6 +254,7 @@ class Ui_MainWindow(object):
         self.light_chbox.setText(QCoreApplication.translate("MainWindow", u"CheckBox", None))
         self.contrast_chbox.setText(QCoreApplication.translate("MainWindow", u"CheckBox", None))
         self.apply_btn.setText(QCoreApplication.translate("MainWindow", u"Apply", None))
+        self.cancel_btn.setText(QCoreApplication.translate("MainWindow", u"Cancel", None))
         self.Settings.setItemText(self.Settings.indexOf(self.page_2), QCoreApplication.translate("MainWindow", u"Options", None))
         self.image_shower.setText("")
     # retranslateUi
