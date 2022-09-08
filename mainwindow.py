@@ -46,13 +46,16 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.transparency_btn = QPushButton(self.groupBox_3)
         self.transparency_btn.setObjectName(u"transparency_btn")
+        self.transparency_btn.setEnabled(True)
+        self.transparency_btn.setMouseTracking(False)
         self.transparency_btn.setCheckable(True)
-        self.transparency_btn.setChecked(False)
+        self.transparency_btn.setChecked(True)
 
         self.verticalLayout.addWidget(self.transparency_btn)
 
         self.white_radiobtn = QRadioButton(self.groupBox_3)
         self.white_radiobtn.setObjectName(u"white_radiobtn")
+        self.white_radiobtn.setEnabled(True)
         self.white_radiobtn.setChecked(True)
 
         self.verticalLayout.addWidget(self.white_radiobtn)

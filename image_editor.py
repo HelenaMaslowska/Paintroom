@@ -3,7 +3,7 @@
 # 30.07.2022
 
 from xml.dom.minicompat import EmptyNodeList
-from PIL import Image, ImageOps, ImageEnhance
+from PIL import Image, ImageOps, ImageEnhance, ImageDraw
 from PIL.ImageQt import ImageQt			#read and change picture
 import sys
 import pathlib
@@ -57,7 +57,10 @@ class MainWindow(QMainWindow):
 		#buttons
 		self.ui.add_img_btn.clicked.connect(self.add_photo)
 		self.ui.save_as_btn.clicked.connect(self.save_as)
+
 		self.ui.transparency_btn.clicked.connect(self.setup_transparency)
+		self.ui.white_radiobtn.clicked.connect(self.white_background)		#JAK TO OBEJSC
+		self.ui.black_radiobtn.clicked.connect(self.black_background)
 
 		self.ui.color_chbox.clicked.connect(self.set_color_checkbox)
 		self.ui.color_slider.valueChanged.connect(self.change_color_spinbox)
@@ -147,17 +150,46 @@ class MainWindow(QMainWindow):
 
 	def setup_transparency(self):
 		if(self.ui.transparency_btn.isChecked()):
+			
 			self.ui.transparency_btn.setChecked(True)
 			self.ui.white_radiobtn.setDisabled(True)
 			self.ui.black_radiobtn.setDisabled(True)
 			self.ui.stripped_radiobtn.setDisabled(True)
 			self.ui.squares_radiobtn.setDisabled(True)
+			self.pixmap = self.img_to_pix(self.curr_image)
+			self.update_image()			
 		else:
 			self.ui.transparency_btn.setChecked(False)
 			self.ui.white_radiobtn.setEnabled(True)
 			self.ui.black_radiobtn.setEnabled(True)
 			self.ui.stripped_radiobtn.setEnabled(True)
 			self.ui.squares_radiobtn.setEnabled(True)
+
+	def white_background(self, filler):
+		if(not self.ui.transparency_btn.isChecked()):
+			if( self.ui.white_radiobtn.isEnabled() ):
+				w, h =  self.pixmap.width(), self.pixmap.height()
+				img = Image.new("RGBA", (w, h))
+				img1 = ImageDraw.Draw(img) 
+				img1.rectangle(xy = [(0, 0), (w, h)], fill = "#ffffff")
+				img.paste(self.curr_image, (0, 0), self.curr_image)
+
+				self.curr_image = img.copy()
+				self.pixmap = self.img_to_pix(self.curr_image)
+				self.update_image()
+
+	def black_background(self, filler):
+		if(not self.ui.transparency_btn.isChecked()):
+			if( self.ui.black_radiobtn.isEnabled() ):
+				w, h =  self.pixmap.width(), self.pixmap.height()
+				img = Image.new("RGBA", (w, h))
+				img1 = ImageDraw.Draw(img) 
+				img1.rectangle(xy = [(0, 0), (w, h)], fill = "#000000")
+				img.paste(self.curr_image, (0, 0), self.curr_image)
+
+				self.curr_image = img.copy()
+				self.pixmap = self.img_to_pix(self.curr_image)
+				self.update_image()
 
 	def set_color_checkbox(self):
 		''' Greyscale/color on photo with color checkbox
