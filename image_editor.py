@@ -65,6 +65,7 @@ class MainWindow(QMainWindow):
 		self.ui.light_slider.valueChanged.connect(self.change_light_spinbox)
 		self.ui.light_spinbox.valueChanged.connect(self.change_light_slider)
 
+		self.ui.contrast_chbox.clicked.connect(self.set_contrast_checkbox)
 		self.ui.contrast_slider.valueChanged.connect(self.change_contrast_spinbox)
 		self.ui.contrast_spinbox.valueChanged.connect(self.change_contrast_slider)
 
@@ -138,22 +139,26 @@ class MainWindow(QMainWindow):
 
 	def set_color_checkbox(self):
 		''' set max or min when this is checked or unchecked '''
-		#self.curr_image = self.image
 		if self.filename == '':
 			return 
 		
-		#pixmap = ''
 		if not self.ui.color_chbox.isChecked():
 			self.ui.color_slider.setValue(self.ui.color_slider.minimum())
 			self.curr_image = ImageOps.grayscale(self.image).convert("RGBA")
 			self.pixmap = self.img_to_pix(self.curr_image)
 		else:
-			#print("max:", self.ui.color_slider.maximum)
 			self.ui.color_slider.setValue(self.ui.color_slider.maximum())		
 			self.pixmap = self.img_to_pix(self.image.convert("RGBA"))
 		self.change_color_spinbox()
 		self.update_image()
 
+	def set_contrast_checkbox(self):
+		if not self.ui.contrast_chbox.isChecked():
+			self.ui.contrast_slider.setValue(self.ui.contrast_slider.minimum())
+		else:
+			self.ui.contrast_slider.setValue(self.ui.contrast_slider.maximum())		
+		self.change_contrast_spinbox()
+		self.update_image()
 
 	def change_color_slider(self):
 		self.ui.color_slider.setValue(self.ui.color_spinbox.value())
