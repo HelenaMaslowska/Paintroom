@@ -159,6 +159,7 @@ class MainWindow(QMainWindow):
 				self.ui.black_radiobtn.setDisabled(True)
 				self.ui.stripped_radiobtn.setDisabled(True)
 				self.ui.squares_radiobtn.setDisabled(True)
+				self.background = None
 				self.update_image(self.curr_image)			
 			else:
 				self.ui.transparency_btn.setChecked(False)
@@ -166,19 +167,22 @@ class MainWindow(QMainWindow):
 				self.ui.black_radiobtn.setEnabled(True)
 				self.ui.stripped_radiobtn.setEnabled(True)
 				self.ui.squares_radiobtn.setEnabled(True)
+				self.update_image(self.curr_image)	
 
 	def change_background(self):
 		if(not self.ui.transparency_btn.isChecked()):
-			w, h =  self.pixmap.width(), self.pixmap.height()
+			print(self.scale(self.pixmap).width(), self.pixmap.width())
+			w, h =  self.scale(self.pixmap).width(), self.scale(self.pixmap).height()
 			self.background = Image.new("RGBA", (w, h))								# pojawia się pusty obrazek
 			draw = ImageDraw.Draw(self.background) 									# img1 będzie rysować na obrazku self.background
-			if self.ui.white_radiobtn.isEnabled() :								# img1 rysuje na self.background prostokąt
+			if self.ui.white_radiobtn.isChecked() :								# img1 rysuje na self.background prostokąt
 				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#ffffff")
-			elif self.ui.black_radiobtn.isEnabled():
+			elif self.ui.black_radiobtn.isChecked():
 				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#000000")
-			elif self.ui.stripped_radiobtn.isEnabled():
-				print(self.ui.how_many_stripes.value)
-			elif self.ui.squares_radiobtn.isEnabled():
+			elif self.ui.stripped_radiobtn.isChecked():
+				print("lol paski", self.ui.how_many_stripes.value())
+				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#ffffff")
+			elif self.ui.squares_radiobtn.isChecked():
 				print(self.ui.how_many_squares.value)
 			self.update_image(self.curr_image)										# aktualizacja obrazka na scenie
 
