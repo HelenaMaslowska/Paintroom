@@ -40,7 +40,7 @@ class Ui_MainWindow(object):
         self.page.setGeometry(QRect(0, 0, 200, 640))
         self.groupBox_3 = QGroupBox(self.page)
         self.groupBox_3.setObjectName(u"groupBox_3")
-        self.groupBox_3.setGeometry(QRect(10, 160, 181, 164))
+        self.groupBox_3.setGeometry(QRect(10, 160, 181, 171))
         self.groupBox_3.setAlignment(Qt.AlignCenter)
         self.verticalLayout = QVBoxLayout(self.groupBox_3)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -55,25 +55,68 @@ class Ui_MainWindow(object):
 
         self.white_radiobtn = QRadioButton(self.groupBox_3)
         self.white_radiobtn.setObjectName(u"white_radiobtn")
-        self.white_radiobtn.setEnabled(True)
-        self.white_radiobtn.setChecked(True)
+        self.white_radiobtn.setEnabled(False)
+        self.white_radiobtn.setCheckable(True)
+        self.white_radiobtn.setChecked(False)
 
         self.verticalLayout.addWidget(self.white_radiobtn)
 
         self.black_radiobtn = QRadioButton(self.groupBox_3)
         self.black_radiobtn.setObjectName(u"black_radiobtn")
+        self.black_radiobtn.setEnabled(False)
 
         self.verticalLayout.addWidget(self.black_radiobtn)
 
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setSpacing(57)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.horizontalLayout_3.setSizeConstraint(QLayout.SetDefaultConstraint)
         self.stripped_radiobtn = QRadioButton(self.groupBox_3)
         self.stripped_radiobtn.setObjectName(u"stripped_radiobtn")
+        self.stripped_radiobtn.setEnabled(False)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.stripped_radiobtn.sizePolicy().hasHeightForWidth())
+        self.stripped_radiobtn.setSizePolicy(sizePolicy1)
 
-        self.verticalLayout.addWidget(self.stripped_radiobtn)
+        self.horizontalLayout_3.addWidget(self.stripped_radiobtn)
 
+        self.how_many_stripes = QSpinBox(self.groupBox_3)
+        self.how_many_stripes.setObjectName(u"how_many_stripes")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.how_many_stripes.sizePolicy().hasHeightForWidth())
+        self.how_many_stripes.setSizePolicy(sizePolicy2)
+        self.how_many_stripes.setMinimum(2)
+        self.how_many_stripes.setMaximum(999)
+        self.how_many_stripes.setValue(4)
+
+        self.horizontalLayout_3.addWidget(self.how_many_stripes)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout_3)
+
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setSpacing(61)
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.squares_radiobtn = QRadioButton(self.groupBox_3)
         self.squares_radiobtn.setObjectName(u"squares_radiobtn")
+        self.squares_radiobtn.setEnabled(False)
 
-        self.verticalLayout.addWidget(self.squares_radiobtn)
+        self.horizontalLayout_4.addWidget(self.squares_radiobtn)
+
+        self.how_many_squares = QSpinBox(self.groupBox_3)
+        self.how_many_squares.setObjectName(u"how_many_squares")
+        self.how_many_squares.setMinimum(2)
+        self.how_many_squares.setMaximum(999)
+        self.how_many_squares.setValue(2)
+
+        self.horizontalLayout_4.addWidget(self.how_many_squares)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout_4)
 
         self.image_groupbox = QGroupBox(self.page)
         self.image_groupbox.setObjectName(u"image_groupbox")

@@ -52,6 +52,7 @@ class MainWindow(QMainWindow):
 		self.filename_temp = ''
 		self.filetype = ''			# type of file, e.g. ['.jpg']
 		self.last_apply = ''
+		self.background:Image = None
 
 	def set_functions(self):
 		#buttons
@@ -59,8 +60,10 @@ class MainWindow(QMainWindow):
 		self.ui.save_as_btn.clicked.connect(self.save_as)
 
 		self.ui.transparency_btn.clicked.connect(self.setup_transparency)
-		self.ui.white_radiobtn.clicked.connect(self.white_background)		#JAK TO OBEJSC
-		self.ui.black_radiobtn.clicked.connect(self.black_background)
+		self.ui.white_radiobtn.clicked.connect(self.change_background)
+		self.ui.black_radiobtn.clicked.connect(self.change_background)
+		self.ui.stripped_radiobtn.clicked.connect(self.change_background)
+		self.ui.squares_radiobtn.clicked.connect(self.change_background)
 
 		self.ui.color_chbox.clicked.connect(self.set_color_checkbox)
 		self.ui.color_slider.valueChanged.connect(self.change_color_spinbox)
@@ -80,7 +83,7 @@ class MainWindow(QMainWindow):
 		self.filename_temp= 'paintroom_temp_image' + str(self.filetype[0])
 		try:
 			print(type(self.image), self.image)
-			if(self.filetype[0] == '.jpg'):
+			if(self.filetype[0] == '.jpg'):			#bug?
 				self.image.convert("RGB").save(self.filename_temp)
 			self.image.save(self.filename_temp)
 		except IOError:
@@ -95,35 +98,39 @@ class MainWindow(QMainWindow):
 			pixmap = pixmap.scaledToHeight(h)
 		return pixmap
 	
+	def merge_images(self, foreground, background):
+		background.paste(foreground, (0, 0), foreground)
+		return background
+
 	def img_to_pix(self, image: Image):
-		''' convert from Image type to pixmap '''
+		''' merge background on pixmap and convert from Image type to pixmap '''
 		image = image.convert("RGBA")
+		print(self.background)
+		if(self.background):
+			image = self.merge_images(image, self.background)
 		r, g, b, a = image.split()
 		data = Image.merge('RGBA', (b, g, r, a)).tobytes("raw", "RGBA")
 		img = QImage(data, image.width, image.height, QImage.Format_ARGB32) 
-		# img = QImage(data, image.width, image.height, QImage.Format_A2BGR30_Premultiplied) 			#this thing change whole image into blue-pink-white image xd
 		pix = QPixmap.fromImage(img) 
 		pix = self.scale(pix)
 		return pix
 
-	def update_image(self):
+	def update_image(self, image):
+		self.pixmap = self.img_to_pix(image)
 		self.ui.image_shower.setPixmap(self.pixmap)
 		self.ui.image_shower.repaint()
 
 	def apply(self):
 		self.image = self.curr_image.copy()
-		print("applied!")
-		print(self.curr_image)
-		print(self.image)
 		self.save_temp_file()
-		self.update_image()
+		self.update_image(self.image)
+		print("applied!")
 
 	def cancel(self):
 		self.curr_image = self.image.copy()
-		print("cancelled!")
-		self.pixmap = self.img_to_pix(self.curr_image)
 		self.save_temp_file()
-		self.update_image()
+		self.update_image(self.curr_image)
+		print("cancelled!")
 
 	def save_as(self):			
 		'''TODO
@@ -135,61 +142,45 @@ class MainWindow(QMainWindow):
 
 	def add_photo(self):
 		''' add/replace new photo to main screen and show it scaled on image_shower '''
-		filename, filter = QFileDialog.getOpenFileName(
-			parent=self, caption='Open file', filter="Image files (*.png *.jpg)")
-		self.filename = filename	
-		pixmap1 = QPixmap(filename)
-		
-		if pixmap1.size():
-			pixmap1 = self.scale(pixmap1)
+		self.filename, filter = QFileDialog.getOpenFileName( parent=self, caption='Open file', filter="Image files (*.png *.jpg)" )	
+		if self.filename != '':
 			self.image = Image.open(self.filename)
-			self.curr_image = self.image.copy()
-			self.pixmap = pixmap1 
+			self.curr_image = Image.open(self.filename)
 			self.filetype = pathlib.Path(self.filename).suffixes
-		self.update_image()
+			self.pixmap = QPixmap(self.filename)
+			self.pixmap = self.scale(self.pixmap)
+			self.update_image(self.curr_image)
 
 	def setup_transparency(self):
-		if(self.ui.transparency_btn.isChecked()):
-			
-			self.ui.transparency_btn.setChecked(True)
-			self.ui.white_radiobtn.setDisabled(True)
-			self.ui.black_radiobtn.setDisabled(True)
-			self.ui.stripped_radiobtn.setDisabled(True)
-			self.ui.squares_radiobtn.setDisabled(True)
-			self.pixmap = self.img_to_pix(self.curr_image)
-			self.update_image()			
-		else:
-			self.ui.transparency_btn.setChecked(False)
-			self.ui.white_radiobtn.setEnabled(True)
-			self.ui.black_radiobtn.setEnabled(True)
-			self.ui.stripped_radiobtn.setEnabled(True)
-			self.ui.squares_radiobtn.setEnabled(True)
+		if self.filename:
+			if(self.ui.transparency_btn.isChecked()):
+				self.ui.transparency_btn.setChecked(True)
+				self.ui.white_radiobtn.setDisabled(True)
+				self.ui.black_radiobtn.setDisabled(True)
+				self.ui.stripped_radiobtn.setDisabled(True)
+				self.ui.squares_radiobtn.setDisabled(True)
+				self.update_image(self.curr_image)			
+			else:
+				self.ui.transparency_btn.setChecked(False)
+				self.ui.white_radiobtn.setEnabled(True)
+				self.ui.black_radiobtn.setEnabled(True)
+				self.ui.stripped_radiobtn.setEnabled(True)
+				self.ui.squares_radiobtn.setEnabled(True)
 
-	def white_background(self, filler):
+	def change_background(self):
 		if(not self.ui.transparency_btn.isChecked()):
-			if( self.ui.white_radiobtn.isEnabled() ):
-				w, h =  self.pixmap.width(), self.pixmap.height()
-				img = Image.new("RGBA", (w, h))
-				img1 = ImageDraw.Draw(img) 
-				img1.rectangle(xy = [(0, 0), (w, h)], fill = "#ffffff")
-				img.paste(self.curr_image, (0, 0), self.curr_image)
-
-				self.curr_image = img.copy()
-				self.pixmap = self.img_to_pix(self.curr_image)
-				self.update_image()
-
-	def black_background(self, filler):
-		if(not self.ui.transparency_btn.isChecked()):
-			if( self.ui.black_radiobtn.isEnabled() ):
-				w, h =  self.pixmap.width(), self.pixmap.height()
-				img = Image.new("RGBA", (w, h))
-				img1 = ImageDraw.Draw(img) 
-				img1.rectangle(xy = [(0, 0), (w, h)], fill = "#000000")
-				img.paste(self.curr_image, (0, 0), self.curr_image)
-
-				self.curr_image = img.copy()
-				self.pixmap = self.img_to_pix(self.curr_image)
-				self.update_image()
+			w, h =  self.pixmap.width(), self.pixmap.height()
+			self.background = Image.new("RGBA", (w, h))								# pojawia się pusty obrazek
+			draw = ImageDraw.Draw(self.background) 									# img1 będzie rysować na obrazku self.background
+			if self.ui.white_radiobtn.isEnabled() :								# img1 rysuje na self.background prostokąt
+				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#ffffff")
+			elif self.ui.black_radiobtn.isEnabled():
+				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#000000")
+			elif self.ui.stripped_radiobtn.isEnabled():
+				print(self.ui.how_many_stripes.value)
+			elif self.ui.squares_radiobtn.isEnabled():
+				print(self.ui.how_many_squares.value)
+			self.update_image(self.curr_image)										# aktualizacja obrazka na scenie
 
 	def set_color_checkbox(self):
 		''' Greyscale/color on photo with color checkbox
@@ -201,12 +192,12 @@ class MainWindow(QMainWindow):
 		if not self.ui.color_chbox.isChecked():
 			self.curr_image = ImageOps.grayscale(self.image).convert("RGBA")
 			self.ui.color_slider.setValue(self.ui.color_slider.minimum())
-			self.pixmap = self.img_to_pix(self.curr_image)
+			self.update_image(self.curr_image)
 		else:
 			self.ui.color_slider.setValue(self.ui.color_slider.maximum())		
-			self.pixmap = self.img_to_pix(self.image)
+			self.curr_image = self.image.copy()
+			self.update_image(self.image)
 		self.change_color_spinbox()
-		self.update_image()
 
 	def set_contrast_checkbox(self):
 		if self.ui.contrast_chbox.isChecked():
@@ -219,10 +210,8 @@ class MainWindow(QMainWindow):
 			factor = 0.1
 			self.curr_image = enhancer.enhance(factor)
 			self.ui.contrast_slider.setValue(self.ui.contrast_slider.minimum())		
-		
-		self.pixmap = self.img_to_pix(self.curr_image)
 		self.change_contrast_spinbox()
-		self.update_image()
+		self.update_image(self.curr_image)
 
 	def change_color_slider(self):
 		self.ui.color_slider.setValue(self.ui.color_spinbox.value())
@@ -263,6 +252,8 @@ if __name__ == "__main__":
 # 	avg = (c.getRed()*0.3 + c.getGreen()*0.6 + c.getBlue()*0.1)/3
 # 	colors = QColor(c).getRgbF()
 # 	print ("(%s,%s) = %s avg: %s" % (x, y, colors, avg))
+
+# img = QImage(data, image.width, image.height, QImage.Format_A2BGR30_Premultiplied) 			#this thing change whole image into blue-pink-white image xd
 
 '''class Window(QMainWindow):
 
