@@ -159,20 +159,19 @@ class MainWindow(QMainWindow):
 				self.ui.black_radiobtn.setDisabled(True)
 				self.ui.stripped_radiobtn.setDisabled(True)
 				self.ui.squares_radiobtn.setDisabled(True)
-				self.background = None
-				self.update_image(self.curr_image)			
+				self.background = None			
 			else:
 				self.ui.transparency_btn.setChecked(False)
 				self.ui.white_radiobtn.setEnabled(True)
 				self.ui.black_radiobtn.setEnabled(True)
 				self.ui.stripped_radiobtn.setEnabled(True)
 				self.ui.squares_radiobtn.setEnabled(True)
-				self.update_image(self.curr_image)	
+			self.update_image(self.curr_image)	
 
 	def change_background(self):
 		if(not self.ui.transparency_btn.isChecked()):
-			print(self.scale(self.pixmap).width(), self.pixmap.width())
-			w, h =  self.scale(self.pixmap).width(), self.scale(self.pixmap).height()
+
+			w, h =  self.pixmap.width(), self.pixmap.height()
 			self.background = Image.new("RGBA", (w, h))								# pojawia się pusty obrazek
 			draw = ImageDraw.Draw(self.background) 									# img1 będzie rysować na obrazku self.background
 			if self.ui.white_radiobtn.isChecked() :								# img1 rysuje na self.background prostokąt
@@ -184,6 +183,8 @@ class MainWindow(QMainWindow):
 				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#ffffff")
 			elif self.ui.squares_radiobtn.isChecked():
 				print(self.ui.how_many_squares.value)
+			print(self.scale(self.pixmap).width(), self.pixmap.width())
+			print(self.background.width)				
 			self.update_image(self.curr_image)										# aktualizacja obrazka na scenie
 
 	def set_color_checkbox(self):
