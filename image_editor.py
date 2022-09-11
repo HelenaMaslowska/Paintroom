@@ -2,6 +2,7 @@
 # Author: Helena Masłowska
 # 30.07.2022
 
+from operator import mod
 from xml.dom.minicompat import EmptyNodeList
 from PIL import Image, ImageOps, ImageEnhance, ImageDraw
 from PIL.ImageQt import ImageQt			#read and change picture
@@ -64,6 +65,8 @@ class MainWindow(QMainWindow):
 		self.ui.black_radiobtn.clicked.connect(self.change_background)
 		self.ui.stripped_radiobtn.clicked.connect(self.change_background)
 		self.ui.squares_radiobtn.clicked.connect(self.change_background)
+		self.ui.how_many_stripes.valueChanged.connect(self.change_background)
+		self.ui.how_many_squares.valueChanged.connect(self.change_background)
 
 		self.ui.color_chbox.clicked.connect(self.set_color_checkbox)
 		self.ui.color_slider.valueChanged.connect(self.change_color_spinbox)
@@ -105,13 +108,10 @@ class MainWindow(QMainWindow):
 	def img_to_pix(self, image: Image):
 		''' merge background on pixmap and convert from Image type to pixmap '''
 		image = image.convert("RGBA")
-		print("img to pix image przed i self.back", image.width, image.height, type(self.background), self.background)
 		if(self.background):
 			image = self.merge_images(image, self.background)		#background się psuje
-		print("img to pix image po ifie", image.width, image.height)
 		r, g, b, a = image.split()
 		data = Image.merge('RGBA', (b, g, r, a)).tobytes("raw", "RGBA")
-		print("img to pix image po", image.width, image.height)
 		img = QImage(data, image.width, image.height, QImage.Format_ARGB32) 
 		self.pixmap = QPixmap.fromImage(img) 
 		self.pixmap = self.scale(self.pixmap)
@@ -149,9 +149,7 @@ class MainWindow(QMainWindow):
 			self.curr_image = Image.open(self.filename)
 			self.filetype = pathlib.Path(self.filename).suffixes
 			self.pixmap = QPixmap(self.filename)
-			print("dodaję zdj przed skalowaniem", self.pixmap.size())
 			self.pixmap = self.scale(self.pixmap)
-			print("skaluję zdjecie", self.pixmap.size())
 			self.change_background()
 			self.update_image(self.curr_image)
 
@@ -164,20 +162,16 @@ class MainWindow(QMainWindow):
 				self.ui.stripped_radiobtn.setDisabled(True)
 				self.ui.squares_radiobtn.setDisabled(True)
 				self.background = None	
-				print("wlaczam przezroczystość")
 			if not self.ui.transparency_btn.isChecked():
 				self.ui.transparency_btn.setChecked(False)
 				self.ui.white_radiobtn.setEnabled(True)
 				self.ui.black_radiobtn.setEnabled(True)
 				self.ui.stripped_radiobtn.setEnabled(True)
 				self.ui.squares_radiobtn.setEnabled(True)
-				print("wyylaczam przezroczystość")
-			print("pixmapa po kliknięciu w przycisk przezroczystość", self.pixmap.size())	
 			self.update_image(self.curr_image)	
 
-	def change_background(self):			#w tej funkcji jest problem
+	def change_background(self):
 		if not self.ui.transparency_btn.isChecked():
-			print("to jest to", self.curr_image.width, self.curr_image.height)
 			w, h =  self.curr_image.width, self.curr_image.height
 			self.background = Image.new("RGBA", (w, h))								# pojawia się pusty obrazek
 			draw = ImageDraw.Draw(self.background) 									# img1 będzie rysować na obrazku self.background
@@ -186,8 +180,12 @@ class MainWindow(QMainWindow):
 			elif self.ui.black_radiobtn.isChecked():
 				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#000000")
 			elif self.ui.stripped_radiobtn.isChecked():
-				print("lol paski", self.ui.how_many_stripes.value())
-				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#ffffff")
+				stripes = self.ui.how_many_stripes.value()
+				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#000000")
+				for i in range(stripes):
+					if i % 2 == 0:
+						# print("width:", w, "height:", h, "start", i*w//stripes, "koniec", (i+1)*w//stripes)
+						draw.rectangle(xy = [(i*w//stripes, 0), ((i+1)*w//stripes, h)], fill = "#ffffff")
 			elif self.ui.squares_radiobtn.isChecked():
 				print(self.ui.how_many_squares.value)				
 		self.update_image(self.curr_image)										# aktualizacja obrazka na scenie
