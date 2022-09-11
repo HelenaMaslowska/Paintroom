@@ -83,7 +83,7 @@ class MainWindow(QMainWindow):
 		self.filename_temp= 'paintroom_temp_image' + str(self.filetype[0])
 		try:
 			print(type(self.image), self.image)
-			if(self.filetype[0] == '.jpg'):			#bug?
+			if(self.filetype[0] == '.jpg'):
 				self.image.convert("RGB").save(self.filename_temp)
 			self.image.save(self.filename_temp)
 		except IOError:
@@ -105,18 +105,19 @@ class MainWindow(QMainWindow):
 	def img_to_pix(self, image: Image):
 		''' merge background on pixmap and convert from Image type to pixmap '''
 		image = image.convert("RGBA")
-		print(self.background)
+		print("img to pix image przed i self.back", image.width, image.height, type(self.background), self.background)
 		if(self.background):
-			image = self.merge_images(image, self.background)
+			image = self.merge_images(image, self.background)		#background się psuje
+		print("img to pix image po ifie", image.width, image.height)
 		r, g, b, a = image.split()
 		data = Image.merge('RGBA', (b, g, r, a)).tobytes("raw", "RGBA")
+		print("img to pix image po", image.width, image.height)
 		img = QImage(data, image.width, image.height, QImage.Format_ARGB32) 
-		pix = QPixmap.fromImage(img) 
-		pix = self.scale(pix)
-		return pix
+		self.pixmap = QPixmap.fromImage(img) 
+		self.pixmap = self.scale(self.pixmap)
 
 	def update_image(self, image):
-		self.pixmap = self.img_to_pix(image)
+		self.img_to_pix(image)
 		self.ui.image_shower.setPixmap(self.pixmap)
 		self.ui.image_shower.repaint()
 
@@ -148,30 +149,36 @@ class MainWindow(QMainWindow):
 			self.curr_image = Image.open(self.filename)
 			self.filetype = pathlib.Path(self.filename).suffixes
 			self.pixmap = QPixmap(self.filename)
+			print("dodaję zdj przed skalowaniem", self.pixmap.size())
 			self.pixmap = self.scale(self.pixmap)
+			print("skaluję zdjecie", self.pixmap.size())
+			self.change_background()
 			self.update_image(self.curr_image)
 
 	def setup_transparency(self):
 		if self.filename:
-			if(self.ui.transparency_btn.isChecked()):
+			if self.ui.transparency_btn.isChecked():
 				self.ui.transparency_btn.setChecked(True)
 				self.ui.white_radiobtn.setDisabled(True)
 				self.ui.black_radiobtn.setDisabled(True)
 				self.ui.stripped_radiobtn.setDisabled(True)
 				self.ui.squares_radiobtn.setDisabled(True)
-				self.background = None			
-			else:
+				self.background = None	
+				print("wlaczam przezroczystość")
+			if not self.ui.transparency_btn.isChecked():
 				self.ui.transparency_btn.setChecked(False)
 				self.ui.white_radiobtn.setEnabled(True)
 				self.ui.black_radiobtn.setEnabled(True)
 				self.ui.stripped_radiobtn.setEnabled(True)
 				self.ui.squares_radiobtn.setEnabled(True)
+				print("wyylaczam przezroczystość")
+			print("pixmapa po kliknięciu w przycisk przezroczystość", self.pixmap.size())	
 			self.update_image(self.curr_image)	
 
-	def change_background(self):
-		if(not self.ui.transparency_btn.isChecked()):
-
-			w, h =  self.pixmap.width(), self.pixmap.height()
+	def change_background(self):			#w tej funkcji jest problem
+		if not self.ui.transparency_btn.isChecked():
+			print("to jest to", self.curr_image.width, self.curr_image.height)
+			w, h =  self.curr_image.width, self.curr_image.height
 			self.background = Image.new("RGBA", (w, h))								# pojawia się pusty obrazek
 			draw = ImageDraw.Draw(self.background) 									# img1 będzie rysować na obrazku self.background
 			if self.ui.white_radiobtn.isChecked() :								# img1 rysuje na self.background prostokąt
@@ -182,10 +189,8 @@ class MainWindow(QMainWindow):
 				print("lol paski", self.ui.how_many_stripes.value())
 				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#ffffff")
 			elif self.ui.squares_radiobtn.isChecked():
-				print(self.ui.how_many_squares.value)
-			print(self.scale(self.pixmap).width(), self.pixmap.width())
-			print(self.background.width)				
-			self.update_image(self.curr_image)										# aktualizacja obrazka na scenie
+				print(self.ui.how_many_squares.value)				
+		self.update_image(self.curr_image)										# aktualizacja obrazka na scenie
 
 	def set_color_checkbox(self):
 		''' Greyscale/color on photo with color checkbox
