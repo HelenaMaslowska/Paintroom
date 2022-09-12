@@ -313,10 +313,13 @@ class Ui_MainWindow(object):
         self.contrast_chbox.setAutoFillBackground(False)
         self.apply_btn = QPushButton(self.page_2)
         self.apply_btn.setObjectName(u"apply_btn")
-        self.apply_btn.setGeometry(QRect(10, 430, 91, 24))
+        self.apply_btn.setGeometry(QRect(10, 450, 91, 24))
         self.cancel_btn = QPushButton(self.page_2)
         self.cancel_btn.setObjectName(u"cancel_btn")
-        self.cancel_btn.setGeometry(QRect(110, 430, 75, 24))
+        self.cancel_btn.setGeometry(QRect(110, 450, 75, 24))
+        self.default_btn = QPushButton(self.page_2)
+        self.default_btn.setObjectName(u"default_btn")
+        self.default_btn.setGeometry(QRect(60, 410, 91, 24))
         self.Settings.addItem(self.page_2, u"Options")
 
         self.horizontalLayout.addWidget(self.Settings)
@@ -372,6 +375,7 @@ class Ui_MainWindow(object):
         self.contrast_chbox.setText(QCoreApplication.translate("MainWindow", u"CheckBox", None))
         self.apply_btn.setText(QCoreApplication.translate("MainWindow", u"Apply", None))
         self.cancel_btn.setText(QCoreApplication.translate("MainWindow", u"Cancel", None))
+        self.default_btn.setText(QCoreApplication.translate("MainWindow", u"Set default", None))
         self.Settings.setItemText(self.Settings.indexOf(self.page_2), QCoreApplication.translate("MainWindow", u"Options", None))
         self.image_shower.setText("")
     # retranslateUi

@@ -9,7 +9,7 @@ from PIL import Image, ImageOps, ImageEnhance, ImageDraw
 from PIL.ImageQt import ImageQt			#read and change picture
 import sys
 import pathlib
-from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QColorDialog		#show on the screen
+from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QColorDialog, QDialogButtonBox, QDialog, QPushButton, QLabel, QVBoxLayout		#show on the screen
 from PySide2.QtGui import QPixmap, QColor, QImage, QIcon, QPalette
 
 import os
@@ -28,8 +28,7 @@ class MainWindow(QMainWindow):
 	"""
 	TODO
 	JPG doesnt have to save as a photo idk why
-	connect all functions to one image and use filters every time
-	make these sliders work
+	make triangle/dual useful
 	"""
 	def __init__(self) -> None:
 		'''
@@ -83,6 +82,7 @@ class MainWindow(QMainWindow):
 		self.ui.contrast_spinbox.valueChanged.connect(self.change_contrast_slider)
 
 		#approve or decline buttons
+		self.ui.default_btn.clicked.connect(self.set_default)
 		self.ui.apply_btn.clicked.connect(self.apply)
 		self.ui.cancel_btn.clicked.connect(self.cancel)
 
@@ -136,9 +136,19 @@ class MainWindow(QMainWindow):
 			self.ui.image_shower.repaint()
 
 	def set_default(self):
+
 		return
 
 	def apply(self):
+		QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+		self.buttonBox = QDialogButtonBox(QBtn)
+		self.buttonBox.accepted.connect(self.accept)
+		self.buttonBox.rejected.connect(self.reject)
+		self.layout = QVBoxLayout()
+		message = QLabel("Something happened, is that OK?")
+		self.layout.addWidget(message)
+		self.layout.addWidget(self.buttonBox)
+		self.setLayout(self.layout)
 		self.image = self.curr_image.copy()
 		if(self.background):
 			self.image = self.merge_images(self.image, self.background)
@@ -190,6 +200,7 @@ class MainWindow(QMainWindow):
 				self.ui.stripes_btn.setEnabled(True)
 				self.ui.squares_radiobtn.setEnabled(True)
 				self.change_background()
+			self.update_image()	
 		else:
 			self.ui.transparency_btn.setChecked(True)
 
@@ -259,7 +270,7 @@ class MainWindow(QMainWindow):
 		self.change_background()
 
 	def set_color(self):
-		max_factor, min_factor = 5, 0.1	
+		max_factor, min_factor = 2, 0.2	
 		factor = self.ui.color_slider.value() * (max_factor-min_factor) / (self.ui.color_slider.maximum()-self.ui.color_slider.minimum()+1)
 		enhancer = ImageEnhance.Color(self.curr_image)
 		self.curr_image = enhancer.enhance(factor)
@@ -276,7 +287,7 @@ class MainWindow(QMainWindow):
 
 	def set_brightness(self):
 		''' Set brightness of an image '''
-		max_factor, min_factor = 5, 0.1		
+		max_factor, min_factor = 2, 0.2		
 		factor = self.ui.light_slider.value() * (max_factor-min_factor) / (self.ui.light_slider.maximum()-self.ui.light_slider.minimum()+1)
 		enhancer = ImageEnhance.Brightness(self.curr_image)
 		self.curr_image = enhancer.enhance(factor)
@@ -292,7 +303,7 @@ class MainWindow(QMainWindow):
 
 	def set_contrast(self):
 		''' Set contrast on image'''
-		max_factor, min_factor = 5, 0.1	
+		max_factor, min_factor = 2, 0.2	
 		factor = self.ui.contrast_slider.value() * (max_factor-min_factor) / (self.ui.contrast_slider.maximum()-self.ui.contrast_slider.minimum()+1)
 		enhancer = ImageEnhance.Contrast(self.curr_image)
 		self.curr_image = enhancer.enhance(factor)
