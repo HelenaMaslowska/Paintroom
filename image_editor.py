@@ -47,7 +47,7 @@ class MainWindow(QMainWindow):
 		self.ui.setupUi(self)
 		self.set_functions()
 		self.pixmap: QPixmap = None
-		self.image: Image = None				# saved but not showed, bring back save pick from apply/start
+		self.image: Image = None
 		self.curr_image: Image = None		
 		self.filename = ''
 		self.filename_temp = ''
@@ -114,7 +114,7 @@ class MainWindow(QMainWindow):
 		''' merge background on pixmap and convert from Image type to pixmap '''
 		image = image.convert("RGBA")
 		if(self.background):
-			image = self.merge_images(image, self.background)		#background się psuje
+			image = self.merge_images(image, self.background)
 		r, g, b, a = image.split()
 		data = Image.merge('RGBA', (b, g, r, a)).tobytes("raw", "RGBA")
 		img = QImage(data, image.width, image.height, QImage.Format_ARGB32) 
