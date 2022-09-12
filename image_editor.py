@@ -72,6 +72,7 @@ class MainWindow(QMainWindow):
 		self.ui.color_slider.valueChanged.connect(self.change_color_spinbox)
 		self.ui.color_spinbox.valueChanged.connect(self.change_color_slider)
 
+		self.ui.light_chbox.clicked.connect(self.set_brightness_checkbox)
 		self.ui.light_slider.valueChanged.connect(self.change_light_spinbox)
 		self.ui.light_spinbox.valueChanged.connect(self.change_light_slider)
 
@@ -169,13 +170,15 @@ class MainWindow(QMainWindow):
 				self.ui.stripped_radiobtn.setEnabled(True)
 				self.ui.squares_radiobtn.setEnabled(True)
 			self.update_image(self.curr_image)	
+		else:
+			self.ui.transparency_btn.setChecked(True)
 
 	def change_background(self):
 		if not self.ui.transparency_btn.isChecked():
 			w, h =  self.curr_image.width, self.curr_image.height
-			self.background = Image.new("RGBA", (w, h))								# pojawia się pusty obrazek
-			draw = ImageDraw.Draw(self.background) 									# img1 będzie rysować na obrazku self.background
-			if self.ui.white_radiobtn.isChecked() :								# img1 rysuje na self.background prostokąt
+			self.background = Image.new("RGBA", (w, h))
+			draw = ImageDraw.Draw(self.background)
+			if self.ui.white_radiobtn.isChecked():
 				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#ffffff")
 			elif self.ui.black_radiobtn.isChecked():
 				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#000000")
@@ -186,14 +189,13 @@ class MainWindow(QMainWindow):
 					if i % 2 == 0:
 						draw.rectangle(xy = [(i*w//stripes, 0), ((i+1)*w//stripes, h)], fill = "#ffffff")
 			elif self.ui.squares_radiobtn.isChecked():
-				print(self.ui.how_many_squares.value)
 				squares = self.ui.how_many_squares.value()
 				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#000000")
 				for i in range(squares):
 					for j in range(squares):
-						if i % 2 == 0:
-							draw.rectangle(xy = [(i*w//stripes, 0), ((i+1)*w//stripes, h)], fill = "#ffffff")
-		self.update_image(self.curr_image)										# aktualizacja obrazka na scenie
+						if (i + j) % 2:
+							draw.rectangle(xy = [(i*w//squares, j*h//squares), ((i+1)*w//squares, (j+1)*h//squares)], fill = "#ffffff")
+		self.update_image(self.curr_image)
 
 	def set_color_checkbox(self):
 		''' Greyscale/color on photo with color checkbox
@@ -211,6 +213,18 @@ class MainWindow(QMainWindow):
 			self.curr_image = self.image.copy()
 			self.update_image(self.image)
 		self.change_color_spinbox()
+
+	def set_brightness_checkbox(self):
+		enhancer = ImageEnhance.Brightness(self.curr_image)
+		if self.ui.light_chbox.isChecked():
+			factor = 1.5
+			self.ui.light_slider.setValue(self.ui.light_slider.maximum())
+		else:
+			factor = 0.5
+			self.ui.light_slider.setValue(self.ui.light_slider.minimum())	
+		self.curr_image = enhancer.enhance(factor)
+		self.change_light_spinbox()
+		self.update_image(self.curr_image)
 
 	def set_contrast_checkbox(self):
 		if self.ui.contrast_chbox.isChecked():
