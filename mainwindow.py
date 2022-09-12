@@ -40,7 +40,7 @@ class Ui_MainWindow(object):
         self.page.setGeometry(QRect(0, 0, 200, 640))
         self.background_groupbox = QGroupBox(self.page)
         self.background_groupbox.setObjectName(u"background_groupbox")
-        self.background_groupbox.setGeometry(QRect(10, 160, 181, 241))
+        self.background_groupbox.setGeometry(QRect(10, 160, 181, 261))
         self.background_groupbox.setAlignment(Qt.AlignCenter)
         self.verticalLayout = QVBoxLayout(self.background_groupbox)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -53,34 +53,39 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.transparency_btn)
 
+        self.white_hor_layout = QHBoxLayout()
+        self.white_hor_layout.setObjectName(u"white_hor_layout")
         self.white_radiobtn = QRadioButton(self.background_groupbox)
         self.white_radiobtn.setObjectName(u"white_radiobtn")
         self.white_radiobtn.setEnabled(False)
         self.white_radiobtn.setCheckable(True)
         self.white_radiobtn.setChecked(False)
 
-        self.verticalLayout.addWidget(self.white_radiobtn)
+        self.white_hor_layout.addWidget(self.white_radiobtn)
 
-        self.horizontalLayout_4 = QHBoxLayout()
-        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+
+        self.verticalLayout.addLayout(self.white_hor_layout)
+
+        self.color_hor_layout = QHBoxLayout()
+        self.color_hor_layout.setObjectName(u"color_hor_layout")
         self.color_radiobtn = QRadioButton(self.background_groupbox)
         self.color_radiobtn.setObjectName(u"color_radiobtn")
         self.color_radiobtn.setEnabled(False)
 
-        self.horizontalLayout_4.addWidget(self.color_radiobtn)
+        self.color_hor_layout.addWidget(self.color_radiobtn)
 
         self.picked_only_color = QPushButton(self.background_groupbox)
         self.picked_only_color.setObjectName(u"picked_only_color")
         self.picked_only_color.setMaximumSize(QSize(25, 25))
         self.picked_only_color.setStyleSheet(u"background-color: rgb(0, 0, 0);")
 
-        self.horizontalLayout_4.addWidget(self.picked_only_color)
+        self.color_hor_layout.addWidget(self.picked_only_color)
 
 
-        self.verticalLayout.addLayout(self.horizontalLayout_4)
+        self.verticalLayout.addLayout(self.color_hor_layout)
 
         self.stripped_hor_layout = QHBoxLayout()
-        self.stripped_hor_layout.setSpacing(57)
+        self.stripped_hor_layout.setSpacing(0)
         self.stripped_hor_layout.setObjectName(u"stripped_hor_layout")
         self.stripped_hor_layout.setSizeConstraint(QLayout.SetDefaultConstraint)
         self.stripped_radiobtn = QRadioButton(self.background_groupbox)
@@ -94,6 +99,24 @@ class Ui_MainWindow(object):
 
         self.stripped_hor_layout.addWidget(self.stripped_radiobtn)
 
+        self.stripes_hor_btn = QPushButton(self.background_groupbox)
+        self.stripes_hor_btn.setObjectName(u"stripes_hor_btn")
+        self.stripes_hor_btn.setEnabled(False)
+        self.stripes_hor_btn.setMaximumSize(QSize(25, 25))
+        self.stripes_hor_btn.setIconSize(QSize(16, 16))
+        self.stripes_hor_btn.setCheckable(True)
+        self.stripes_hor_btn.setChecked(True)
+
+        self.stripped_hor_layout.addWidget(self.stripes_hor_btn)
+
+        self.stripes_ver_btn = QPushButton(self.background_groupbox)
+        self.stripes_ver_btn.setObjectName(u"stripes_ver_btn")
+        self.stripes_ver_btn.setEnabled(False)
+        self.stripes_ver_btn.setMaximumSize(QSize(25, 25))
+        self.stripes_ver_btn.setCheckable(True)
+
+        self.stripped_hor_layout.addWidget(self.stripes_ver_btn)
+
         self.how_many_stripes = QSpinBox(self.background_groupbox)
         self.how_many_stripes.setObjectName(u"how_many_stripes")
         sizePolicy2 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
@@ -102,7 +125,7 @@ class Ui_MainWindow(object):
         sizePolicy2.setHeightForWidth(self.how_many_stripes.sizePolicy().hasHeightForWidth())
         self.how_many_stripes.setSizePolicy(sizePolicy2)
         self.how_many_stripes.setMinimum(2)
-        self.how_many_stripes.setMaximum(999)
+        self.how_many_stripes.setMaximum(99)
         self.how_many_stripes.setValue(4)
 
         self.stripped_hor_layout.addWidget(self.how_many_stripes)
@@ -332,6 +355,8 @@ class Ui_MainWindow(object):
         self.color_radiobtn.setText(QCoreApplication.translate("MainWindow", u"color", None))
         self.picked_only_color.setText("")
         self.stripped_radiobtn.setText(QCoreApplication.translate("MainWindow", u"stripped", None))
+        self.stripes_hor_btn.setText(QCoreApplication.translate("MainWindow", u"=", None))
+        self.stripes_ver_btn.setText(QCoreApplication.translate("MainWindow", u"||", None))
         self.squares_radiobtn.setText(QCoreApplication.translate("MainWindow", u"squares", None))
         self.picked_color1.setText("")
         self.swap_btn.setText(QCoreApplication.translate("MainWindow", u"swap", None))
@@ -341,7 +366,7 @@ class Ui_MainWindow(object):
         self.save_as_btn.setText(QCoreApplication.translate("MainWindow", u"Save as", None))
         self.save_btn.setText(QCoreApplication.translate("MainWindow", u"Save", None))
         self.Settings.setItemText(self.Settings.indexOf(self.page), QCoreApplication.translate("MainWindow", u"Image", None))
-        self.groupBox_2.setTitle(QCoreApplication.translate("MainWindow", u"GroupBox", None))
+        self.groupBox_2.setTitle(QCoreApplication.translate("MainWindow", u"Color effects", None))
         self.normal_radiobtn.setText(QCoreApplication.translate("MainWindow", u"Normal", None))
         self.triangle_radiobtn.setText(QCoreApplication.translate("MainWindow", u"Triangle", None))
         self.dual_radiobtn.setText(QCoreApplication.translate("MainWindow", u"Dual", None))

@@ -3,6 +3,7 @@
 # 30.07.2022
 
 from operator import mod
+from tokenize import String
 from xml.dom.minicompat import EmptyNodeList
 from PIL import Image, ImageOps, ImageEnhance, ImageDraw
 from PIL.ImageQt import ImageQt			#read and change picture
@@ -49,50 +50,54 @@ class MainWindow(QMainWindow):
 		self.pixmap: QPixmap = None
 		self.image: Image = None
 		self.curr_image: Image = None		
-		self.filename = ''
-		self.filename_temp = ''
+		self.filename: str = None
+		self.filename_temp: str == None
+		self.saving_filename: str = None
 		self.filetype = ''			# type of file, e.g. ['.jpg']
-		self.last_apply = ''
-		self.background:Image = None
+		self.background: Image = None
 
 	def set_functions(self):
-		#buttons
+		#files from computer buttons
 		self.ui.add_img_btn.clicked.connect(self.add_photo)
 		self.ui.save_as_btn.clicked.connect(self.save_as)
 
+		#background
 		self.ui.transparency_btn.clicked.connect(self.setup_transparency)
 		self.ui.white_radiobtn.clicked.connect(self.change_background)
 		self.ui.color_radiobtn.clicked.connect(self.change_background)
 		self.ui.stripped_radiobtn.clicked.connect(self.change_background)
+		self.ui.stripes_hor_btn.clicked.connect(self.stripes_mode_hor)
+		self.ui.stripes_ver_btn.clicked.connect(self.stripes_mode_ver)
 		self.ui.how_many_stripes.valueChanged.connect(self.change_background)		
 		self.ui.squares_radiobtn.clicked.connect(self.change_background)
 		self.ui.how_many_squares.valueChanged.connect(self.change_background)
+
 		self.ui.picked_only_color.clicked.connect(self.one_color_picker)
 		self.ui.picked_color1.clicked.connect(self.color_picker1)
 		self.ui.picked_color2.clicked.connect(self.color_picker2)
 		self.ui.swap_btn.clicked.connect(self.swap_colors)
 
+		#filters
 		self.ui.color_chbox.clicked.connect(self.set_color_checkbox)
 		self.ui.color_slider.valueChanged.connect(self.change_color_spinbox)
 		self.ui.color_spinbox.valueChanged.connect(self.change_color_slider)
-
 		self.ui.light_chbox.clicked.connect(self.set_brightness_checkbox)
 		self.ui.light_slider.valueChanged.connect(self.change_light_spinbox)
 		self.ui.light_spinbox.valueChanged.connect(self.change_light_slider)
-
 		self.ui.contrast_chbox.clicked.connect(self.set_contrast_checkbox)
 		self.ui.contrast_slider.valueChanged.connect(self.change_contrast_spinbox)
 		self.ui.contrast_spinbox.valueChanged.connect(self.change_contrast_slider)
 
+		#approve or decline buttons
 		self.ui.apply_btn.clicked.connect(self.apply)
 		self.ui.cancel_btn.clicked.connect(self.cancel)
 
 	def save_temp_file(self):
-		self.filename_temp= 'paintroom_temp_image' + str(self.filetype[0])
+		self.filename_temp= 'paintroom_temp_image' + str(self.filetype)
 		try:
 			print(type(self.image), self.image)
-			if(self.filetype[0] == '.jpg'):
-				self.image.convert("RGB").save(self.filename_temp)
+			# if(self.filetype == '.jpg'):
+			# 	self.image.convert("RGBA").save(self.filename_temp)	#to szkodzi jpgom
 			self.image.save(self.filename_temp)
 		except IOError:
 			print("error", self.filename_temp)
@@ -122,12 +127,15 @@ class MainWindow(QMainWindow):
 		self.pixmap = self.scale(self.pixmap)
 
 	def update_image(self, image):
-		self.img_to_pix(image)
-		self.ui.image_shower.setPixmap(self.pixmap)
-		self.ui.image_shower.repaint()
+		if self.filename:
+			self.img_to_pix(image)
+			self.ui.image_shower.setPixmap(self.pixmap)
+			self.ui.image_shower.repaint()
 
 	def apply(self):
 		self.image = self.curr_image.copy()
+		if(self.background):
+			self.image = self.merge_images(self.image, self.background)
 		self.save_temp_file()
 		self.update_image(self.image)
 		print("applied!")
@@ -143,36 +151,44 @@ class MainWindow(QMainWindow):
 		IT DOESN'T WORK YET xd
 		change type to self.type
 		'''
-		filepath = QFileDialog.getOpenFileName(self, 'Hey! Select a File')
-		self.pixmap.save(self.pixmap)
+		self.apply()
+		filepath, _ = QFileDialog.getSaveFileName(parent = self, caption='Save me! Just do it!', filter="Image files (*.png *.jpg)")
+		print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", filepath)
+		self.image = self.image.save(filepath)
 
 	def add_photo(self):
 		''' add/replace new photo to main screen and show it scaled on image_shower '''
-		self.filename, filter = QFileDialog.getOpenFileName( parent=self, caption='Open file', filter="Image files (*.png *.jpg)" )	
+		self.filename, filter = QFileDialog.getOpenFileName( parent=self, caption='Open me!!!', filter="Image files (*.png *.jpg)" )	
 		if self.filename != '':
 			self.image = Image.open(self.filename)
 			self.curr_image = Image.open(self.filename)
-			self.filetype = pathlib.Path(self.filename).suffixes
+			self.filetype = pathlib.Path(self.filename).suffix
 			self.pixmap = QPixmap(self.filename)
 			self.pixmap = self.scale(self.pixmap)
 			self.change_background()
 			self.update_image(self.curr_image)
 
 	def setup_transparency(self):
+		"""setup transparent btn and checkboxes"""
 		if self.filename:
 			if self.ui.transparency_btn.isChecked():
 				self.ui.transparency_btn.setChecked(True)
 				self.ui.white_radiobtn.setDisabled(True)
 				self.ui.color_radiobtn.setDisabled(True)
 				self.ui.stripped_radiobtn.setDisabled(True)
+				self.ui.stripes_hor_btn.setDisabled(True)
+				self.ui.stripes_ver_btn.setDisabled(True)
 				self.ui.squares_radiobtn.setDisabled(True)
 				self.background = None	
-			if not self.ui.transparency_btn.isChecked():
+			else:
 				self.ui.transparency_btn.setChecked(False)
 				self.ui.white_radiobtn.setEnabled(True)
 				self.ui.color_radiobtn.setEnabled(True)
 				self.ui.stripped_radiobtn.setEnabled(True)
+				self.ui.stripes_hor_btn.setEnabled(True)
+				self.ui.stripes_ver_btn.setEnabled(True)
 				self.ui.squares_radiobtn.setEnabled(True)
+				self.change_background()
 			self.update_image(self.curr_image)	
 		else:
 			self.ui.transparency_btn.setChecked(True)
@@ -180,34 +196,45 @@ class MainWindow(QMainWindow):
 	def change_background(self):
 		if not self.ui.transparency_btn.isChecked():
 			w, h =  self.curr_image.width, self.curr_image.height
+			color1 = self.ui.picked_color1.palette().button().color().name()
+			color2 = self.ui.picked_color2.palette().button().color().name()
 			self.background = Image.new("RGBA", (w, h))
 			draw = ImageDraw.Draw(self.background)
 			if self.ui.white_radiobtn.isChecked():
-				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#ffffff")
+				draw.rectangle(  xy = [(0, 0), (w, h)],  fill = "#ffffff"  )
 			elif self.ui.color_radiobtn.isChecked():
-				draw.rectangle(xy = [(0, 0), (w, h)], fill = self.ui.picked_only_color.palette().button().color().name())
+				draw.rectangle(  xy = [(0, 0), (w, h)],  fill = self.ui.picked_only_color.palette().button().color().name()  )
 			elif self.ui.stripped_radiobtn.isChecked():
 				stripes = self.ui.how_many_stripes.value()
-				draw.rectangle(
-					xy = [(0, 0), (w, h)], 
-					fill = self.ui.picked_color2.palette().button().color().name())					#black
-				for i in range(stripes):
-					if i % 2 == 0:
-						draw.rectangle(
-							xy = [(i*w//stripes, 0), ((i+1)*w//stripes, h)], 
-							fill = self.ui.picked_color1.palette().button().color().name()) 		#white
+				draw.rectangle(  xy = [(0, 0), (w, h)],  fill = color2  )											#black
+				if self.ui.stripes_ver_btn.isChecked():
+					for i in range(stripes):
+						if i % 2 == 0:
+							draw.rectangle(  xy = [(i*w//stripes, 0), ((i+1)*w//stripes, h)],  fill = color1  )		#white
+				else:
+					for i in range(stripes):
+						if i % 2 == 0:
+							draw.rectangle(  xy = [(0, i*h//stripes), (w, (i+1)*h//stripes)],  fill = color1  ) 	#white
 			elif self.ui.squares_radiobtn.isChecked():
 				squares = self.ui.how_many_squares.value()
-				draw.rectangle(
-					xy = [(0, 0), (w, h)], 
-					fill = self.ui.picked_color1.palette().button().color().name())					#black
+				draw.rectangle(  xy = [(0, 0), (w, h)],  fill = color1  )											#black
 				for i in range(squares):
 					for j in range(squares):
 						if (i + j) % 2:
-							draw.rectangle(
-								xy = [(i*w//squares, j*h//squares), ((i+1)*w//squares, (j+1)*h//squares)], 
-								fill = self.ui.picked_color2.palette().button().color().name()) 	#white
-		self.update_image(self.curr_image)
+							draw.rectangle( 
+								xy = [ (i*w//squares, j*h//squares), ((i+1)*w//squares, (j+1)*h//squares) ],  
+								fill = color2  ) 		#white
+			self.update_image(self.curr_image)
+
+	def stripes_mode_ver(self):
+		if self.ui.stripes_ver_btn.isChecked():
+			self.ui.stripes_hor_btn.setChecked(False)	
+			self.change_background()	
+
+	def stripes_mode_hor(self):
+		if self.ui.stripes_hor_btn.isChecked():
+			self.ui.stripes_ver_btn.setChecked(False)		
+			self.change_background()
 
 	def one_color_picker(self):
 		color = QColorDialog.getColor()
@@ -238,11 +265,11 @@ class MainWindow(QMainWindow):
 		''' Greyscale/color on photo with color checkbox
 			return nothing'''
 
-		if self.filename == '':
+		if not self.filename:
 			return 
 
 		if not self.ui.color_chbox.isChecked():
-			self.curr_image = ImageOps.grayscale(self.image).convert("RGBA")
+			self.curr_image = ImageOps.grayscale(self.image)
 			self.ui.color_slider.setValue(self.ui.color_slider.minimum())
 			self.update_image(self.curr_image)
 		else:
