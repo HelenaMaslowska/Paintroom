@@ -66,8 +66,7 @@ class MainWindow(QMainWindow):
 		self.ui.white_radiobtn.clicked.connect(self.change_background)
 		self.ui.color_radiobtn.clicked.connect(self.change_background)
 		self.ui.stripped_radiobtn.clicked.connect(self.change_background)
-		self.ui.stripes_hor_btn.clicked.connect(self.stripes_mode_hor)
-		self.ui.stripes_ver_btn.clicked.connect(self.stripes_mode_ver)
+		self.ui.stripes_btn.clicked.connect(self.stripes_mode)
 		self.ui.how_many_stripes.valueChanged.connect(self.change_background)		
 		self.ui.squares_radiobtn.clicked.connect(self.change_background)
 		self.ui.how_many_squares.valueChanged.connect(self.change_background)
@@ -176,8 +175,7 @@ class MainWindow(QMainWindow):
 				self.ui.white_radiobtn.setDisabled(True)
 				self.ui.color_radiobtn.setDisabled(True)
 				self.ui.stripped_radiobtn.setDisabled(True)
-				self.ui.stripes_hor_btn.setDisabled(True)
-				self.ui.stripes_ver_btn.setDisabled(True)
+				self.ui.stripes_btn.setDisabled(True)
 				self.ui.squares_radiobtn.setDisabled(True)
 				self.background = None	
 			else:
@@ -185,8 +183,7 @@ class MainWindow(QMainWindow):
 				self.ui.white_radiobtn.setEnabled(True)
 				self.ui.color_radiobtn.setEnabled(True)
 				self.ui.stripped_radiobtn.setEnabled(True)
-				self.ui.stripes_hor_btn.setEnabled(True)
-				self.ui.stripes_ver_btn.setEnabled(True)
+				self.ui.stripes_btn.setEnabled(True)
 				self.ui.squares_radiobtn.setEnabled(True)
 				self.change_background()
 			self.update_image(self.curr_image)	
@@ -207,7 +204,7 @@ class MainWindow(QMainWindow):
 			elif self.ui.stripped_radiobtn.isChecked():
 				stripes = self.ui.how_many_stripes.value()
 				draw.rectangle(  xy = [(0, 0), (w, h)],  fill = color2  )											#black
-				if self.ui.stripes_ver_btn.isChecked():
+				if self.ui.stripes_btn.text() == "||":
 					for i in range(stripes):
 						if i % 2 == 0:
 							draw.rectangle(  xy = [(i*w//stripes, 0), ((i+1)*w//stripes, h)],  fill = color1  )		#white
@@ -226,15 +223,12 @@ class MainWindow(QMainWindow):
 								fill = color2  ) 		#white
 			self.update_image(self.curr_image)
 
-	def stripes_mode_ver(self):
-		if self.ui.stripes_ver_btn.isChecked():
-			self.ui.stripes_hor_btn.setChecked(False)	
-			self.change_background()	
-
-	def stripes_mode_hor(self):
-		if self.ui.stripes_hor_btn.isChecked():
-			self.ui.stripes_ver_btn.setChecked(False)		
-			self.change_background()
+	def stripes_mode(self):
+		if self.ui.stripes_btn.text() == "||":
+			self.ui.stripes_btn.setText("=")
+		elif self.ui.stripes_btn.text() == "=":
+			self.ui.stripes_btn.setText("||")
+		self.change_background()
 
 	def one_color_picker(self):
 		color = QColorDialog.getColor()

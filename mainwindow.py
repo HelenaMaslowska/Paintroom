@@ -85,7 +85,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addLayout(self.color_hor_layout)
 
         self.stripped_hor_layout = QHBoxLayout()
-        self.stripped_hor_layout.setSpacing(0)
+        self.stripped_hor_layout.setSpacing(13)
         self.stripped_hor_layout.setObjectName(u"stripped_hor_layout")
         self.stripped_hor_layout.setSizeConstraint(QLayout.SetDefaultConstraint)
         self.stripped_radiobtn = QRadioButton(self.background_groupbox)
@@ -99,23 +99,13 @@ class Ui_MainWindow(object):
 
         self.stripped_hor_layout.addWidget(self.stripped_radiobtn)
 
-        self.stripes_hor_btn = QPushButton(self.background_groupbox)
-        self.stripes_hor_btn.setObjectName(u"stripes_hor_btn")
-        self.stripes_hor_btn.setEnabled(False)
-        self.stripes_hor_btn.setMaximumSize(QSize(25, 25))
-        self.stripes_hor_btn.setIconSize(QSize(16, 16))
-        self.stripes_hor_btn.setCheckable(True)
-        self.stripes_hor_btn.setChecked(True)
+        self.stripes_btn = QPushButton(self.background_groupbox)
+        self.stripes_btn.setObjectName(u"stripes_btn")
+        self.stripes_btn.setEnabled(False)
+        self.stripes_btn.setMaximumSize(QSize(25, 25))
+        self.stripes_btn.setCheckable(True)
 
-        self.stripped_hor_layout.addWidget(self.stripes_hor_btn)
-
-        self.stripes_ver_btn = QPushButton(self.background_groupbox)
-        self.stripes_ver_btn.setObjectName(u"stripes_ver_btn")
-        self.stripes_ver_btn.setEnabled(False)
-        self.stripes_ver_btn.setMaximumSize(QSize(25, 25))
-        self.stripes_ver_btn.setCheckable(True)
-
-        self.stripped_hor_layout.addWidget(self.stripes_ver_btn)
+        self.stripped_hor_layout.addWidget(self.stripes_btn)
 
         self.how_many_stripes = QSpinBox(self.background_groupbox)
         self.how_many_stripes.setObjectName(u"how_many_stripes")
@@ -354,9 +344,8 @@ class Ui_MainWindow(object):
         self.white_radiobtn.setText(QCoreApplication.translate("MainWindow", u"white", None))
         self.color_radiobtn.setText(QCoreApplication.translate("MainWindow", u"color", None))
         self.picked_only_color.setText("")
-        self.stripped_radiobtn.setText(QCoreApplication.translate("MainWindow", u"stripped", None))
-        self.stripes_hor_btn.setText(QCoreApplication.translate("MainWindow", u"=", None))
-        self.stripes_ver_btn.setText(QCoreApplication.translate("MainWindow", u"||", None))
+        self.stripped_radiobtn.setText(QCoreApplication.translate("MainWindow", u"stripped   ", None))
+        self.stripes_btn.setText(QCoreApplication.translate("MainWindow", u"||", None))
         self.squares_radiobtn.setText(QCoreApplication.translate("MainWindow", u"squares", None))
         self.picked_color1.setText("")
         self.swap_btn.setText(QCoreApplication.translate("MainWindow", u"swap", None))
