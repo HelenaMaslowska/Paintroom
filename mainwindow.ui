@@ -57,17 +57,17 @@
        <attribute name="label">
         <string>Image</string>
        </attribute>
-       <widget class="QGroupBox" name="groupBox_3">
+       <widget class="QGroupBox" name="background_groupbox">
         <property name="geometry">
          <rect>
           <x>10</x>
           <y>160</y>
           <width>181</width>
-          <height>171</height>
+          <height>241</height>
          </rect>
         </property>
         <property name="title">
-         <string>For transparent images</string>
+         <string>Background</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -109,17 +109,37 @@
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="black_radiobtn">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string>black</string>
-           </property>
-          </widget>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QRadioButton" name="color_radiobtn">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>color</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="picked_only_color">
+             <property name="maximumSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(0, 0, 0);</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <layout class="QHBoxLayout" name="stripped_hor_layout">
            <property name="spacing">
             <number>57</number>
            </property>
@@ -164,9 +184,9 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <layout class="QHBoxLayout" name="squares_hor_layout">
            <property name="spacing">
-            <number>61</number>
+            <number>57</number>
            </property>
            <item>
             <widget class="QRadioButton" name="squares_radiobtn">
@@ -188,6 +208,97 @@
              </property>
              <property name="value">
               <number>2</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="colors_hor_layout">
+           <property name="spacing">
+            <number>5</number>
+           </property>
+           <property name="leftMargin">
+            <number>30</number>
+           </property>
+           <property name="rightMargin">
+            <number>30</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="picked_color1">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="checkable">
+              <bool>false</bool>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+             <property name="autoRepeatDelay">
+              <number>300</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="swap_btn">
+             <property name="maximumSize">
+              <size>
+               <width>50</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>swap</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="picked_color2">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(0, 0, 0);</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="checkable">
+              <bool>false</bool>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
@@ -219,7 +330,7 @@
            <height>86</height>
           </rect>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
+         <layout class="QVBoxLayout" name="image_layout">
           <item>
            <widget class="QPushButton" name="add_img_btn">
             <property name="text">

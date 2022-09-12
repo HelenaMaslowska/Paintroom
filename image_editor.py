@@ -9,8 +9,8 @@ from PIL.ImageQt import ImageQt			#read and change picture
 import sys
 import pathlib
 import tempfile
-from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog		#show on the screen
-from PySide2.QtGui import QPixmap, QColor, QImage, QIcon
+from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QColorDialog		#show on the screen
+from PySide2.QtGui import QPixmap, QColor, QImage, QIcon, QPalette
 from PySide2.QtCore import QFile , Qt
 
 import os
@@ -62,11 +62,14 @@ class MainWindow(QMainWindow):
 
 		self.ui.transparency_btn.clicked.connect(self.setup_transparency)
 		self.ui.white_radiobtn.clicked.connect(self.change_background)
-		self.ui.black_radiobtn.clicked.connect(self.change_background)
+		self.ui.color_radiobtn.clicked.connect(self.change_background)
 		self.ui.stripped_radiobtn.clicked.connect(self.change_background)
+		self.ui.how_many_stripes.valueChanged.connect(self.change_background)		
 		self.ui.squares_radiobtn.clicked.connect(self.change_background)
-		self.ui.how_many_stripes.valueChanged.connect(self.change_background)
 		self.ui.how_many_squares.valueChanged.connect(self.change_background)
+		self.ui.picked_only_color.clicked.connect(self.one_color_picker)
+		self.ui.picked_color1.clicked.connect(self.color_picker1)
+		self.ui.picked_color2.clicked.connect(self.color_picker2)
 
 		self.ui.color_chbox.clicked.connect(self.set_color_checkbox)
 		self.ui.color_slider.valueChanged.connect(self.change_color_spinbox)
@@ -159,14 +162,14 @@ class MainWindow(QMainWindow):
 			if self.ui.transparency_btn.isChecked():
 				self.ui.transparency_btn.setChecked(True)
 				self.ui.white_radiobtn.setDisabled(True)
-				self.ui.black_radiobtn.setDisabled(True)
+				self.ui.color_radiobtn.setDisabled(True)
 				self.ui.stripped_radiobtn.setDisabled(True)
 				self.ui.squares_radiobtn.setDisabled(True)
 				self.background = None	
 			if not self.ui.transparency_btn.isChecked():
 				self.ui.transparency_btn.setChecked(False)
 				self.ui.white_radiobtn.setEnabled(True)
-				self.ui.black_radiobtn.setEnabled(True)
+				self.ui.color_radiobtn.setEnabled(True)
 				self.ui.stripped_radiobtn.setEnabled(True)
 				self.ui.squares_radiobtn.setEnabled(True)
 			self.update_image(self.curr_image)	
@@ -180,22 +183,48 @@ class MainWindow(QMainWindow):
 			draw = ImageDraw.Draw(self.background)
 			if self.ui.white_radiobtn.isChecked():
 				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#ffffff")
-			elif self.ui.black_radiobtn.isChecked():
-				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#000000")
+			elif self.ui.color_radiobtn.isChecked():
+				draw.rectangle(xy = [(0, 0), (w, h)], fill = self.ui.picked_only_color.palette().button().color().name())
 			elif self.ui.stripped_radiobtn.isChecked():
 				stripes = self.ui.how_many_stripes.value()
-				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#000000")
+				draw.rectangle(
+					xy = [(0, 0), (w, h)], 
+					fill = self.ui.picked_color2.palette().button().color().name())					#black
 				for i in range(stripes):
 					if i % 2 == 0:
-						draw.rectangle(xy = [(i*w//stripes, 0), ((i+1)*w//stripes, h)], fill = "#ffffff")
+						draw.rectangle(
+							xy = [(i*w//stripes, 0), ((i+1)*w//stripes, h)], 
+							fill = self.ui.picked_color1.palette().button().color().name()) 		#white
 			elif self.ui.squares_radiobtn.isChecked():
 				squares = self.ui.how_many_squares.value()
-				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#000000")
+				draw.rectangle(
+					xy = [(0, 0), (w, h)], 
+					fill = self.ui.picked_color1.palette().button().color().name())					#black
 				for i in range(squares):
 					for j in range(squares):
 						if (i + j) % 2:
-							draw.rectangle(xy = [(i*w//squares, j*h//squares), ((i+1)*w//squares, (j+1)*h//squares)], fill = "#ffffff")
+							draw.rectangle(
+								xy = [(i*w//squares, j*h//squares), ((i+1)*w//squares, (j+1)*h//squares)], 
+								fill = self.ui.picked_color2.palette().button().color().name()) 	#white
 		self.update_image(self.curr_image)
+
+	def one_color_picker(self):
+		color = QColorDialog.getColor()
+		if(color.isValid()):
+			self.ui.picked_only_color.setStyleSheet("background-color: %s" % color.name())
+			self.change_background()
+
+	def color_picker1(self):
+		color = QColorDialog.getColor()
+		if(color.isValid()):
+			self.ui.picked_color1.setStyleSheet("background-color: %s" % color.name())
+			self.change_background()
+	
+	def color_picker2(self):
+		color = QColorDialog.getColor()
+		if(color.isValid()): 
+			self.ui.picked_color2.setStyleSheet("background-color: %s" % color.name())
+			self.change_background()
 
 	def set_color_checkbox(self):
 		''' Greyscale/color on photo with color checkbox
@@ -217,7 +246,7 @@ class MainWindow(QMainWindow):
 	def set_brightness_checkbox(self):
 		enhancer = ImageEnhance.Brightness(self.curr_image)
 		if self.ui.light_chbox.isChecked():
-			factor = 1.5
+			factor = 2
 			self.ui.light_slider.setValue(self.ui.light_slider.maximum())
 		else:
 			factor = 0.5
