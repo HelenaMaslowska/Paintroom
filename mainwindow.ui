@@ -43,7 +43,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page">
        <property name="geometry">
@@ -479,11 +479,14 @@
            <height>121</height>
           </rect>
          </property>
+         <property name="minimum">
+          <number>1</number>
+         </property>
          <property name="maximum">
           <number>100</number>
          </property>
          <property name="value">
-          <number>100</number>
+          <number>50</number>
          </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -497,6 +500,9 @@
            <width>22</width>
            <height>121</height>
           </rect>
+         </property>
+         <property name="minimum">
+          <number>1</number>
          </property>
          <property name="maximum">
           <number>100</number>
@@ -516,6 +522,9 @@
            <width>22</width>
            <height>121</height>
           </rect>
+         </property>
+         <property name="minimum">
+          <number>1</number>
          </property>
          <property name="maximum">
           <number>100</number>
@@ -540,7 +549,7 @@
           <number>100</number>
          </property>
          <property name="value">
-          <number>100</number>
+          <number>50</number>
          </property>
         </widget>
         <widget class="QSpinBox" name="light_spinbox">
@@ -645,7 +654,7 @@
           <string>CheckBox</string>
          </property>
          <property name="checked">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
         </widget>
         <widget class="QCheckBox" name="light_chbox">
@@ -697,7 +706,7 @@
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>430</y>
+          <y>450</y>
           <width>91</width>
           <height>24</height>
          </rect>
@@ -710,13 +719,26 @@
         <property name="geometry">
          <rect>
           <x>110</x>
-          <y>430</y>
+          <y>450</y>
           <width>75</width>
           <height>24</height>
          </rect>
         </property>
         <property name="text">
          <string>Cancel</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="default_btn">
+        <property name="geometry">
+         <rect>
+          <x>60</x>
+          <y>410</y>
+          <width>91</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Set default</string>
         </property>
        </widget>
       </widget>

@@ -9,10 +9,8 @@ from PIL import Image, ImageOps, ImageEnhance, ImageDraw
 from PIL.ImageQt import ImageQt			#read and change picture
 import sys
 import pathlib
-import tempfile
 from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QColorDialog		#show on the screen
 from PySide2.QtGui import QPixmap, QColor, QImage, QIcon, QPalette
-from PySide2.QtCore import QFile , Qt
 
 import os
 import subprocess
@@ -21,20 +19,17 @@ from numpy import apply_along_axis
 from mainwindow import Ui_MainWindow
 FILEBROWSER_PATH = os.path.join(os.getenv('WINDIR'), 'explorer.exe')
 
-width = 1000
-height = 800
-
 # pyside2-uic mainwindow.ui -o mainwindow.py
 
-# pixmap - tylko i wylacznie wyswietlanie obrazków
 # qt - czyta i zapisuje obrazki
 # pil - obrobka obrazu
 # self.ui - wszystkie rzeczy związane z plikiem mainwindow
 class MainWindow(QMainWindow):
 	"""
 	TODO
-	Understand which path image is edited
-	Fix jpg and png bug
+	JPG doesnt have to save as a photo idk why
+	connect all functions to one image and use filters every time
+	make these sliders work
 	"""
 	def __init__(self) -> None:
 		'''
@@ -94,9 +89,8 @@ class MainWindow(QMainWindow):
 	def save_temp_file(self):
 		self.filename_temp= 'paintroom_temp_image' + str(self.filetype)
 		try:
-			print(type(self.image), self.image)
 			# if(self.filetype == '.jpg'):
-			# 	self.image.convert("RGBA").save(self.filename_temp)	#to szkodzi jpgom
+			# 	self.image.convert("RGBA").save(self.filename_temp)	#ten convert rgba szkodzi jpgom bo one nie mają kanału alpha, ale bez A też nie działa xd
 			self.image.save(self.filename_temp)
 		except IOError:
 			print("error", self.filename_temp)
@@ -125,24 +119,37 @@ class MainWindow(QMainWindow):
 		self.pixmap = QPixmap.fromImage(img) 
 		self.pixmap = self.scale(self.pixmap)
 
-	def update_image(self, image):
+	def set_all_filters(self):
+		self.curr_image = self.image.copy()
+		# front filters
+		self.set_color()
+		self.set_brightness()
+		self.set_contrast()
+		# back filter
+		self.change_background()
+		self.update_image()
+
+	def update_image(self):
 		if self.filename:
-			self.img_to_pix(image)
+			self.img_to_pix(self.curr_image)
 			self.ui.image_shower.setPixmap(self.pixmap)
 			self.ui.image_shower.repaint()
+
+	def set_default(self):
+		return
 
 	def apply(self):
 		self.image = self.curr_image.copy()
 		if(self.background):
 			self.image = self.merge_images(self.image, self.background)
 		self.save_temp_file()
-		self.update_image(self.image)
+		self.update_image()
 		print("applied!")
 
 	def cancel(self):
 		self.curr_image = self.image.copy()
 		self.save_temp_file()
-		self.update_image(self.curr_image)
+		self.update_image()
 		print("cancelled!")
 
 	def save_as(self):			
@@ -152,7 +159,6 @@ class MainWindow(QMainWindow):
 		'''
 		self.apply()
 		filepath, _ = QFileDialog.getSaveFileName(parent = self, caption='Save me! Just do it!', filter="Image files (*.png *.jpg)")
-		print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", filepath)
 		self.image = self.image.save(filepath)
 
 	def add_photo(self):
@@ -162,10 +168,8 @@ class MainWindow(QMainWindow):
 			self.image = Image.open(self.filename)
 			self.curr_image = Image.open(self.filename)
 			self.filetype = pathlib.Path(self.filename).suffix
-			self.pixmap = QPixmap(self.filename)
-			self.pixmap = self.scale(self.pixmap)
 			self.change_background()
-			self.update_image(self.curr_image)
+			self.update_image()
 
 	def setup_transparency(self):
 		"""setup transparent btn and checkboxes"""
@@ -186,7 +190,6 @@ class MainWindow(QMainWindow):
 				self.ui.stripes_btn.setEnabled(True)
 				self.ui.squares_radiobtn.setEnabled(True)
 				self.change_background()
-			self.update_image(self.curr_image)	
 		else:
 			self.ui.transparency_btn.setChecked(True)
 
@@ -221,7 +224,7 @@ class MainWindow(QMainWindow):
 							draw.rectangle( 
 								xy = [ (i*w//squares, j*h//squares), ((i+1)*w//squares, (j+1)*h//squares) ],  
 								fill = color2  ) 		#white
-			self.update_image(self.curr_image)
+		self.update_image()
 
 	def stripes_mode(self):
 		if self.ui.stripes_btn.text() == "||":
@@ -255,66 +258,77 @@ class MainWindow(QMainWindow):
 		self.ui.picked_color2.setStyleSheet("background-color: %s" % color1)
 		self.change_background()
 
+	def set_color(self):
+		max_factor, min_factor = 5, 0.1	
+		factor = self.ui.color_slider.value() * (max_factor-min_factor) / (self.ui.color_slider.maximum()-self.ui.color_slider.minimum()+1)
+		enhancer = ImageEnhance.Color(self.curr_image)
+		self.curr_image = enhancer.enhance(factor)
+
 	def set_color_checkbox(self):
-		''' Greyscale/color on photo with color checkbox
-			return nothing'''
-
-		if not self.filename:
-			return 
-
-		if not self.ui.color_chbox.isChecked():
-			self.curr_image = ImageOps.grayscale(self.image)
-			self.ui.color_slider.setValue(self.ui.color_slider.minimum())
-			self.update_image(self.curr_image)
-		else:
-			self.ui.color_slider.setValue(self.ui.color_slider.maximum())		
-			self.curr_image = self.image.copy()
-			self.update_image(self.image)
+		''' Greyscale/color on photo with color checkbox '''
+		if self.ui.color_chbox.isChecked():
+			# self.curr_image = ImageOps.grayscale(self.image)
+			self.ui.color_slider.setValue(self.ui.color_slider.maximum())
+		elif not self.ui.color_chbox.isChecked():
+			self.ui.color_slider.setValue(self.ui.color_slider.minimum())		
 		self.change_color_spinbox()
+		self.set_all_filters()
+
+	def set_brightness(self):
+		''' Set brightness of an image '''
+		max_factor, min_factor = 5, 0.1		
+		factor = self.ui.light_slider.value() * (max_factor-min_factor) / (self.ui.light_slider.maximum()-self.ui.light_slider.minimum()+1)
+		enhancer = ImageEnhance.Brightness(self.curr_image)
+		self.curr_image = enhancer.enhance(factor)
 
 	def set_brightness_checkbox(self):
-		enhancer = ImageEnhance.Brightness(self.curr_image)
+		''' Brightness on photo with light checkbox '''
 		if self.ui.light_chbox.isChecked():
-			factor = 2
 			self.ui.light_slider.setValue(self.ui.light_slider.maximum())
-		else:
-			factor = 0.5
-			self.ui.light_slider.setValue(self.ui.light_slider.minimum())	
+		elif not self.ui.light_chbox.isChecked():
+			self.ui.light_slider.setValue(self.ui.light_slider.minimum())
+		self.change_light_spinbox()	
+		self.set_all_filters()
+
+	def set_contrast(self):
+		''' Set contrast on image'''
+		max_factor, min_factor = 5, 0.1	
+		factor = self.ui.contrast_slider.value() * (max_factor-min_factor) / (self.ui.contrast_slider.maximum()-self.ui.contrast_slider.minimum()+1)
+		enhancer = ImageEnhance.Contrast(self.curr_image)
 		self.curr_image = enhancer.enhance(factor)
-		self.change_light_spinbox()
-		self.update_image(self.curr_image)
 
 	def set_contrast_checkbox(self):
+		''' Contrast on photo with contrast checkbox '''
 		if self.ui.contrast_chbox.isChecked():
-			enhancer = ImageEnhance.Contrast(self.curr_image)
-			factor = 10
-			self.curr_image = enhancer.enhance(factor)
 			self.ui.contrast_slider.setValue(self.ui.contrast_slider.maximum())
-		else:
-			enhancer = ImageEnhance.Contrast(self.curr_image)
-			factor = 0.1
-			self.curr_image = enhancer.enhance(factor)
+		elif not self.ui.contrast_chbox.isChecked():
 			self.ui.contrast_slider.setValue(self.ui.contrast_slider.minimum())		
 		self.change_contrast_spinbox()
-		self.update_image(self.curr_image)
+		self.set_all_filters()
 
 	def change_color_slider(self):
 		self.ui.color_slider.setValue(self.ui.color_spinbox.value())
+		self.set_all_filters()
 
 	def change_light_slider(self):
 		self.ui.light_slider.setValue(self.ui.light_spinbox.value())
+		self.set_all_filters()
 
 	def change_contrast_slider(self):
 		self.ui.contrast_slider.setValue(self.ui.contrast_spinbox.value())
+		self.set_all_filters()
 
 	def change_color_spinbox(self):
 		self.ui.color_spinbox.setValue(self.ui.color_slider.value())
+		self.set_all_filters()
 
 	def change_light_spinbox(self):
 		self.ui.light_spinbox.setValue(self.ui.light_slider.value())
+		self.set_all_filters()
 
 	def change_contrast_spinbox(self):
 		self.ui.contrast_spinbox.setValue(self.ui.contrast_slider.value())
+		self.set_all_filters()
 
 
 if __name__ == "__main__":
