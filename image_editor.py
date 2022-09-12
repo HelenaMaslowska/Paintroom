@@ -184,10 +184,15 @@ class MainWindow(QMainWindow):
 				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#000000")
 				for i in range(stripes):
 					if i % 2 == 0:
-						# print("width:", w, "height:", h, "start", i*w//stripes, "koniec", (i+1)*w//stripes)
 						draw.rectangle(xy = [(i*w//stripes, 0), ((i+1)*w//stripes, h)], fill = "#ffffff")
 			elif self.ui.squares_radiobtn.isChecked():
-				print(self.ui.how_many_squares.value)				
+				print(self.ui.how_many_squares.value)
+				squares = self.ui.how_many_squares.value()
+				draw.rectangle(xy = [(0, 0), (w, h)], fill = "#000000")
+				for i in range(squares):
+					for j in range(squares):
+						if i % 2 == 0:
+							draw.rectangle(xy = [(i*w//stripes, 0), ((i+1)*w//stripes, h)], fill = "#ffffff")
 		self.update_image(self.curr_image)										# aktualizacja obrazka na scenie
 
 	def set_color_checkbox(self):
