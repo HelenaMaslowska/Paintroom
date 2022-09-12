@@ -70,6 +70,7 @@ class MainWindow(QMainWindow):
 		self.ui.picked_only_color.clicked.connect(self.one_color_picker)
 		self.ui.picked_color1.clicked.connect(self.color_picker1)
 		self.ui.picked_color2.clicked.connect(self.color_picker2)
+		self.ui.swap_btn.clicked.connect(self.swap_colors)
 
 		self.ui.color_chbox.clicked.connect(self.set_color_checkbox)
 		self.ui.color_slider.valueChanged.connect(self.change_color_spinbox)
@@ -225,6 +226,13 @@ class MainWindow(QMainWindow):
 		if(color.isValid()): 
 			self.ui.picked_color2.setStyleSheet("background-color: %s" % color.name())
 			self.change_background()
+	
+	def swap_colors(self):
+		color1 = self.ui.picked_color1.palette().button().color().name()
+		color2 = self.ui.picked_color2.palette().button().color().name()
+		self.ui.picked_color1.setStyleSheet("background-color: %s" % color2)
+		self.ui.picked_color2.setStyleSheet("background-color: %s" % color1)
+		self.change_background()
 
 	def set_color_checkbox(self):
 		''' Greyscale/color on photo with color checkbox
