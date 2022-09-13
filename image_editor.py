@@ -137,6 +137,8 @@ class MainWindow(QMainWindow):
 			# premium filters
 			self.invert_colors()
 			self.gauss_blur()
+			# color picker
+			self.ui.color_from_image.setStyleSheet("background-color: %s" % ) """tutaj wstaw ten kolor co wyjdzie"""
 			# back filter
 			self.change_background()
 			self.update_image()
@@ -364,6 +366,18 @@ class MainWindow(QMainWindow):
 	def gauss_blur_checkbox(self):
 		self.set_all_filters()
 
+	def change_mode(self):
+		'''TODO
+		mono color - set one color and greyscale others
+		dual - set one color and color in one color others
+		triangle - get 3 most popular colors '''
+		if self.ui.mono_radiobtn.isChecked():
+			return
+		if self.ui.dual_radiobtn.isChecked():
+			return
+		if self.ui.triangle_radiobtn.isChecked():
+			return
+		self.update_image()
 
 if __name__ == "__main__":
 	app = QApplication(sys.argv)
