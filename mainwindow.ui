@@ -169,7 +169,7 @@
            <item>
             <widget class="QPushButton" name="stripes_btn">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="maximumSize">
               <size>
@@ -378,6 +378,45 @@
          </layout>
         </widget>
        </widget>
+       <widget class="QPushButton" name="apply_btn_2">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>480</y>
+          <width>81</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Apply</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="cancel_btn_2">
+        <property name="geometry">
+         <rect>
+          <x>100</x>
+          <y>480</y>
+          <width>81</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Cancel</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="default_btn_2">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>450</y>
+          <width>161</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Set default</string>
+        </property>
+       </widget>
       </widget>
       <widget class="QWidget" name="page_2">
        <property name="geometry">
@@ -391,23 +430,23 @@
        <attribute name="label">
         <string>Options</string>
        </attribute>
-       <widget class="QGroupBox" name="groupBox_2">
+       <widget class="QGroupBox" name="color_picker_groupbox">
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>260</y>
+          <y>360</y>
           <width>181</width>
-          <height>134</height>
+          <height>171</height>
          </rect>
         </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>150</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="title">
-         <string>Color effects</string>
+         <string>Color picker</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -444,16 +483,65 @@
            </property>
           </widget>
          </item>
+         <item>
+          <layout class="QHBoxLayout" name="color_horizontal_layout">
+           <item>
+            <widget class="QPushButton" name="third_color_effect">
+             <property name="maximumSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="first_color_effect">
+             <property name="maximumSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>&gt;&lt;</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="sec_color_effect">
+             <property name="maximumSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
         </layout>
        </widget>
-       <widget class="QGroupBox" name="groupBox">
+       <widget class="QGroupBox" name="basic_filters_groupbox">
         <property name="geometry">
          <rect>
           <x>10</x>
           <y>0</y>
-          <width>182</width>
+          <width>181</width>
           <height>250</height>
          </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>250</height>
+         </size>
         </property>
         <property name="maximumSize">
          <size>
@@ -465,7 +553,7 @@
          <enum>Qt::LeftToRight</enum>
         </property>
         <property name="title">
-         <string>Image beautifier</string>
+         <string>Basic filters</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -480,7 +568,7 @@
           </rect>
          </property>
          <property name="minimum">
-          <number>1</number>
+          <number>0</number>
          </property>
          <property name="maximum">
           <number>100</number>
@@ -502,7 +590,7 @@
           </rect>
          </property>
          <property name="minimum">
-          <number>1</number>
+          <number>0</number>
          </property>
          <property name="maximum">
           <number>100</number>
@@ -524,7 +612,7 @@
           </rect>
          </property>
          <property name="minimum">
-          <number>1</number>
+          <number>0</number>
          </property>
          <property name="maximum">
           <number>100</number>
@@ -651,7 +739,7 @@
           <bool>false</bool>
          </property>
          <property name="text">
-          <string>CheckBox</string>
+          <string/>
          </property>
          <property name="checked">
           <bool>false</bool>
@@ -676,7 +764,7 @@
           <bool>false</bool>
          </property>
          <property name="text">
-          <string>CheckBox</string>
+          <string/>
          </property>
         </widget>
         <widget class="QCheckBox" name="contrast_chbox">
@@ -698,16 +786,16 @@
           <bool>false</bool>
          </property>
          <property name="text">
-          <string>CheckBox</string>
+          <string/>
          </property>
         </widget>
        </widget>
        <widget class="QPushButton" name="apply_btn">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>450</y>
-          <width>91</width>
+          <x>20</x>
+          <y>600</y>
+          <width>81</width>
           <height>24</height>
          </rect>
         </property>
@@ -718,9 +806,9 @@
        <widget class="QPushButton" name="cancel_btn">
         <property name="geometry">
          <rect>
-          <x>110</x>
-          <y>450</y>
-          <width>75</width>
+          <x>100</x>
+          <y>600</y>
+          <width>81</width>
           <height>24</height>
          </rect>
         </property>
@@ -731,15 +819,70 @@
        <widget class="QPushButton" name="default_btn">
         <property name="geometry">
          <rect>
-          <x>60</x>
-          <y>410</y>
-          <width>91</width>
+          <x>20</x>
+          <y>570</y>
+          <width>161</width>
           <height>24</height>
          </rect>
         </property>
         <property name="text">
          <string>Set default</string>
         </property>
+       </widget>
+       <widget class="QGroupBox" name="filters_group_box">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>260</y>
+          <width>181</width>
+          <height>91</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Premium filters</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignHCenter|Qt::AlignTop</set>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QCheckBox" name="invert_chbox">
+           <property name="text">
+            <string>Invert colors</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <property name="spacing">
+            <number>25</number>
+           </property>
+           <item>
+            <widget class="QCheckBox" name="gauss_chbox">
+             <property name="text">
+              <string>Gaussian blur</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="gauss_value">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>25</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>99</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
        </widget>
       </widget>
      </widget>

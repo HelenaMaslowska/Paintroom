@@ -5,11 +5,11 @@
 from operator import mod
 from tokenize import String
 from xml.dom.minicompat import EmptyNodeList
-from PIL import Image, ImageOps, ImageEnhance, ImageDraw
+from PIL import Image, ImageOps, ImageEnhance, ImageDraw, ImageFilter
 from PIL.ImageQt import ImageQt			#read and change picture
 import sys
 import pathlib
-from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QColorDialog, QDialogButtonBox, QDialog, QPushButton, QLabel, QVBoxLayout		#show on the screen
+from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QColorDialog, QDialogButtonBox, QDialog, QPushButton, QLabel, QVBoxLayout, QMessageBox		#show on the screen
 from PySide2.QtGui import QPixmap, QColor, QImage, QIcon, QPalette
 
 import os
@@ -47,7 +47,7 @@ class MainWindow(QMainWindow):
 		self.filename: str = None
 		self.filename_temp: str == None
 		self.saving_filename: str = None
-		self.filetype = ''			# type of file, e.g. ['.jpg']
+		self.filetype = ''			# type of file, e.g. '.jpg'
 		self.background: Image = None
 
 	def set_functions(self):
@@ -70,7 +70,7 @@ class MainWindow(QMainWindow):
 		self.ui.picked_color2.clicked.connect(self.color_picker2)
 		self.ui.swap_btn.clicked.connect(self.swap_colors)
 
-		#filters
+		# basic filters
 		self.ui.color_chbox.clicked.connect(self.set_color_checkbox)
 		self.ui.color_slider.valueChanged.connect(self.change_color_spinbox)
 		self.ui.color_spinbox.valueChanged.connect(self.change_color_slider)
@@ -81,10 +81,18 @@ class MainWindow(QMainWindow):
 		self.ui.contrast_slider.valueChanged.connect(self.change_contrast_spinbox)
 		self.ui.contrast_spinbox.valueChanged.connect(self.change_contrast_slider)
 
+		# advanced filters
+		self.ui.invert_chbox.clicked.connect(self.invert_colors_checkbox)
+		self.ui.gauss_chbox.clicked.connect(self.gauss_blur_checkbox)
+		self.ui.gauss_value.valueChanged.connect(self.gauss_blur_checkbox)
+
 		#approve or decline buttons
 		self.ui.default_btn.clicked.connect(self.set_default)
 		self.ui.apply_btn.clicked.connect(self.apply)
 		self.ui.cancel_btn.clicked.connect(self.cancel)
+		self.ui.default_btn_2.clicked.connect(self.set_default)
+		self.ui.apply_btn_2.clicked.connect(self.apply)
+		self.ui.cancel_btn_2.clicked.connect(self.cancel)
 
 	def save_temp_file(self):
 		self.filename_temp= 'paintroom_temp_image' + str(self.filetype)
@@ -120,14 +128,18 @@ class MainWindow(QMainWindow):
 		self.pixmap = self.scale(self.pixmap)
 
 	def set_all_filters(self):
-		self.curr_image = self.image.copy()
-		# front filters
-		self.set_color()
-		self.set_brightness()
-		self.set_contrast()
-		# back filter
-		self.change_background()
-		self.update_image()
+		if self.filename:
+			self.curr_image = self.image.copy()
+			# basic filters
+			self.set_color()
+			self.set_brightness()
+			self.set_contrast()
+			# premium filters
+			self.invert_colors()
+			self.gauss_blur()
+			# back filter
+			self.change_background()
+			self.update_image()
 
 	def update_image(self):
 		if self.filename:
@@ -136,19 +148,20 @@ class MainWindow(QMainWindow):
 			self.ui.image_shower.repaint()
 
 	def set_default(self):
-
+		self.ui.color_slider.setValue(50)
+		self.ui.light_slider.setValue(50)
+		self.ui.contrast_slider.setValue(50)
+		self.ui.color_chbox.setChecked(False)
+		self.ui.light_chbox.setChecked(False)
+		self.ui.contrast_chbox.setChecked(False)
+		self.ui.color_spinbox.setValue(self.ui.color_slider.value())
+		self.ui.light_spinbox.setValue(self.ui.light_slider.value())
+		self.ui.invert_chbox.setChecked(False)
+		self.ui.gauss_chbox.setChecked(False)
+		self.change_contrast_spinbox()
 		return
 
 	def apply(self):
-		QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
-		self.buttonBox = QDialogButtonBox(QBtn)
-		self.buttonBox.accepted.connect(self.accept)
-		self.buttonBox.rejected.connect(self.reject)
-		self.layout = QVBoxLayout()
-		message = QLabel("Something happened, is that OK?")
-		self.layout.addWidget(message)
-		self.layout.addWidget(self.buttonBox)
-		self.setLayout(self.layout)
 		self.image = self.curr_image.copy()
 		if(self.background):
 			self.image = self.merge_images(self.image, self.background)
@@ -164,7 +177,7 @@ class MainWindow(QMainWindow):
 
 	def save_as(self):			
 		'''TODO
-		IT DOESN'T WORK YET xd
+		JPG DOESN'T WORK YET xd useless function, apply make new image better
 		change type to self.type
 		'''
 		self.apply()
@@ -185,19 +198,15 @@ class MainWindow(QMainWindow):
 		"""setup transparent btn and checkboxes"""
 		if self.filename:
 			if self.ui.transparency_btn.isChecked():
-				self.ui.transparency_btn.setChecked(True)
 				self.ui.white_radiobtn.setDisabled(True)
 				self.ui.color_radiobtn.setDisabled(True)
 				self.ui.stripped_radiobtn.setDisabled(True)
-				self.ui.stripes_btn.setDisabled(True)
 				self.ui.squares_radiobtn.setDisabled(True)
 				self.background = None	
 			else:
-				self.ui.transparency_btn.setChecked(False)
 				self.ui.white_radiobtn.setEnabled(True)
 				self.ui.color_radiobtn.setEnabled(True)
 				self.ui.stripped_radiobtn.setEnabled(True)
-				self.ui.stripes_btn.setEnabled(True)
 				self.ui.squares_radiobtn.setEnabled(True)
 				self.change_background()
 			self.update_image()	
@@ -270,7 +279,7 @@ class MainWindow(QMainWindow):
 		self.change_background()
 
 	def set_color(self):
-		max_factor, min_factor = 2, 0.2	
+		max_factor, min_factor = 2.0, 0.0	
 		factor = self.ui.color_slider.value() * (max_factor-min_factor) / (self.ui.color_slider.maximum()-self.ui.color_slider.minimum()+1)
 		enhancer = ImageEnhance.Color(self.curr_image)
 		self.curr_image = enhancer.enhance(factor)
@@ -287,7 +296,7 @@ class MainWindow(QMainWindow):
 
 	def set_brightness(self):
 		''' Set brightness of an image '''
-		max_factor, min_factor = 2, 0.2		
+		max_factor, min_factor = 2.0, 0.0		
 		factor = self.ui.light_slider.value() * (max_factor-min_factor) / (self.ui.light_slider.maximum()-self.ui.light_slider.minimum()+1)
 		enhancer = ImageEnhance.Brightness(self.curr_image)
 		self.curr_image = enhancer.enhance(factor)
@@ -303,7 +312,7 @@ class MainWindow(QMainWindow):
 
 	def set_contrast(self):
 		''' Set contrast on image'''
-		max_factor, min_factor = 2, 0.2	
+		max_factor, min_factor = 2.0, 0.0	
 		factor = self.ui.contrast_slider.value() * (max_factor-min_factor) / (self.ui.contrast_slider.maximum()-self.ui.contrast_slider.minimum()+1)
 		enhancer = ImageEnhance.Contrast(self.curr_image)
 		self.curr_image = enhancer.enhance(factor)
@@ -339,6 +348,20 @@ class MainWindow(QMainWindow):
 
 	def change_contrast_spinbox(self):
 		self.ui.contrast_spinbox.setValue(self.ui.contrast_slider.value())
+		self.set_all_filters()
+
+	def invert_colors(self):
+		if self.ui.invert_chbox.isChecked():
+			self.curr_image = ImageOps.invert(self.curr_image)
+
+	def invert_colors_checkbox(self):
+		self.set_all_filters()
+
+	def gauss_blur(self):
+		if self.ui.gauss_chbox.isChecked():
+			self.curr_image = self.curr_image.filter(ImageFilter.GaussianBlur(float(self.ui.gauss_value.value())))
+
+	def gauss_blur_checkbox(self):
 		self.set_all_filters()
 
 
