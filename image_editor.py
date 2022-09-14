@@ -58,9 +58,9 @@ class MainWindow(QMainWindow):
 		self.background: Image = None
 
 	def set_functions(self):
+
 		#files from computer buttons
 		self.ui.add_img_btn.clicked.connect(self.add_photo)
-		self.ui.save_as_btn.clicked.connect(self.save_as)
 
 		#background
 		self.ui.transparency_btn.clicked.connect(self.setup_transparency)
@@ -92,6 +92,10 @@ class MainWindow(QMainWindow):
 		self.ui.invert_chbox.clicked.connect(self.invert_colors_checkbox)
 		self.ui.gauss_chbox.clicked.connect(self.gauss_blur_checkbox)
 		self.ui.gauss_value.valueChanged.connect(self.gauss_blur_checkbox)
+
+		# color picker
+		self.ui.color_from_image.clicked.connect(self.get_color)
+		self.ui.first_color_effect.clicked.connect(self.color_modifier)
 
 		#approve or decline buttons
 		self.ui.default_btn.clicked.connect(self.set_default)
@@ -134,27 +138,6 @@ class MainWindow(QMainWindow):
 		self.pixmap = QPixmap.fromImage(img) 
 		self.pixmap = self.scale(self.pixmap)
 
-	def get_color(self):
-		NUM_CLUSTERS = 5
-		im = self.curr_image
-		im = im.resize((150, 150))      # optional, to reduce time
-		ar = np.asarray(im)
-		shape = ar.shape
-		ar = ar.reshape(scipy.product(shape[:2]), shape[2]).astype(float)
-
-		#print('finding clusters')
-		codes, dist = scipy.cluster.vq.kmeans(ar, NUM_CLUSTERS)
-		#print('cluster centres:\n', codes)
-
-		vecs, dist = scipy.cluster.vq.vq(ar, codes)         # assign codes
-		counts, bins = scipy.histogram(vecs, len(codes))    # count occurrences
-
-		index_max = np.argmax(counts)                    # find most frequent
-		peak = codes[index_max]
-		col = binascii.hexlify(bytearray(int(c) for c in peak)).decode('ascii')
-		# print('most frequent is %s (#%s)' % (peak, col))
-		self.ui.color_from_image.setStyleSheet("background-color: #%s" % str(col))
-
 	def set_all_filters(self):
 		if self.filename:
 			self.curr_image = self.image.copy()
@@ -166,7 +149,7 @@ class MainWindow(QMainWindow):
 			self.invert_colors()
 			self.gauss_blur()
 			# color picker
-			self.get_color()
+
 			# back filter
 			self.change_background()
 			self.update_image()
@@ -186,9 +169,10 @@ class MainWindow(QMainWindow):
 		self.ui.contrast_chbox.setChecked(False)
 		self.ui.color_spinbox.setValue(self.ui.color_slider.value())
 		self.ui.light_spinbox.setValue(self.ui.light_slider.value())
+		self.ui.contrast_spinbox.setValue(self.ui.contrast_slider.value())
 		self.ui.invert_chbox.setChecked(False)
 		self.ui.gauss_chbox.setChecked(False)
-		self.change_contrast_spinbox()
+		self.set_all_filters()
 		return
 
 	def apply(self):
@@ -222,6 +206,7 @@ class MainWindow(QMainWindow):
 			self.curr_image = Image.open(self.filename)
 			self.filetype = pathlib.Path(self.filename).suffix
 			self.get_color()
+			self.set_all_filters()
 			self.change_background()
 			self.update_image()
 
@@ -420,6 +405,36 @@ class MainWindow(QMainWindow):
 		if self.ui.triangle_radiobtn.isChecked():
 			return
 		self.update_image()
+
+	def color_modifier(self):
+		color = QColorDialog.getColor()
+		if(color.isValid()):
+			self.ui.first_color_effect.setStyleSheet("background-color: %s" % color.name())
+			self.change_background()
+
+	def get_color(self):
+		''' get dominant color of an image from NUM_CLUSTERS points'''
+		NUM_CLUSTERS = 5
+		im = self.curr_image
+		im = im.resize((150, 150))      # optional, to reduce time
+		ar = np.asarray(im)
+		shape = ar.shape
+		ar = ar.reshape(np.product(shape[:2]), shape[2]).astype(float)
+
+		#print('finding clusters')
+		codes, dist = scipy.cluster.vq.kmeans(ar, NUM_CLUSTERS)
+		#print('cluster centres:\n', codes)
+
+		vecs, dist = scipy.cluster.vq.vq(ar, codes)         # assign codes
+		counts, bins = np.histogram(vecs, len(codes))    # count occurrences
+
+		index_max = np.argmax(counts)                    # find most frequent
+		peak = codes[index_max]
+		col = binascii.hexlify(bytearray(int(c) for c in peak)).decode('ascii')
+		# print('most frequent is %s (#%s)' % (peak, col))
+		self.ui.color_from_image.setStyleSheet("background-color: #%s" % str(col))
+
+
 
 if __name__ == "__main__":
 	app = QApplication(sys.argv)

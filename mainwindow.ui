@@ -43,7 +43,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page">
        <property name="geometry">
@@ -344,38 +344,42 @@
         <property name="alignment">
          <set>Qt::AlignCenter</set>
         </property>
-        <widget class="QWidget" name="verticalLayoutWidget">
+        <widget class="QPushButton" name="add_img_btn">
          <property name="geometry">
           <rect>
            <x>30</x>
-           <y>30</y>
-           <width>121</width>
-           <height>86</height>
+           <y>33</y>
+           <width>119</width>
+           <height>71</height>
           </rect>
          </property>
-         <layout class="QVBoxLayout" name="image_layout">
-          <item>
-           <widget class="QPushButton" name="add_img_btn">
-            <property name="text">
-             <string>Add image</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="save_as_btn">
-            <property name="text">
-             <string>Save as</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="save_btn">
-            <property name="text">
-             <string>Save</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <property name="font">
+          <font>
+           <family>Showcard Gothic</family>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:135, stop:0 rgba(255, 255, 0, 69), stop:0.375 rgba(255, 255, 0, 69), stop:0.423533 rgba(251, 255, 0, 145), stop:0.45 rgba(247, 255, 0, 208), stop:0.477581 rgba(255, 244, 71, 130), stop:0.518717 rgba(255, 218, 71, 130), stop:0.55 rgba(255, 255, 0, 255), stop:0.57754 rgba(255, 203, 0, 130), stop:0.625 rgba(255, 255, 0, 69), stop:1 rgba(255, 255, 0, 69));</string>
+         </property>
+         <property name="text">
+          <string> Add image</string>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>16</width>
+           <height>16</height>
+          </size>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
         </widget>
        </widget>
        <widget class="QPushButton" name="apply_btn_2">

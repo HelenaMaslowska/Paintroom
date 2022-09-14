@@ -185,27 +185,18 @@ class Ui_MainWindow(object):
         self.image_groupbox.setObjectName(u"image_groupbox")
         self.image_groupbox.setGeometry(QRect(9, 9, 181, 131))
         self.image_groupbox.setAlignment(Qt.AlignCenter)
-        self.verticalLayoutWidget = QWidget(self.image_groupbox)
-        self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-        self.verticalLayoutWidget.setGeometry(QRect(30, 30, 121, 86))
-        self.image_layout = QVBoxLayout(self.verticalLayoutWidget)
-        self.image_layout.setObjectName(u"image_layout")
-        self.image_layout.setContentsMargins(0, 0, 0, 0)
-        self.add_img_btn = QPushButton(self.verticalLayoutWidget)
+        self.add_img_btn = QPushButton(self.image_groupbox)
         self.add_img_btn.setObjectName(u"add_img_btn")
-
-        self.image_layout.addWidget(self.add_img_btn)
-
-        self.save_as_btn = QPushButton(self.verticalLayoutWidget)
-        self.save_as_btn.setObjectName(u"save_as_btn")
-
-        self.image_layout.addWidget(self.save_as_btn)
-
-        self.save_btn = QPushButton(self.verticalLayoutWidget)
-        self.save_btn.setObjectName(u"save_btn")
-
-        self.image_layout.addWidget(self.save_btn)
-
+        self.add_img_btn.setGeometry(QRect(30, 33, 119, 71))
+        font = QFont()
+        font.setFamily(u"Showcard Gothic")
+        font.setPointSize(11)
+        self.add_img_btn.setFont(font)
+        self.add_img_btn.setAutoFillBackground(False)
+        self.add_img_btn.setStyleSheet(u"background-color: qconicalgradient(cx:0, cy:0, angle:135, stop:0 rgba(255, 255, 0, 69), stop:0.375 rgba(255, 255, 0, 69), stop:0.423533 rgba(251, 255, 0, 145), stop:0.45 rgba(247, 255, 0, 208), stop:0.477581 rgba(255, 244, 71, 130), stop:0.518717 rgba(255, 218, 71, 130), stop:0.55 rgba(255, 255, 0, 255), stop:0.57754 rgba(255, 203, 0, 130), stop:0.625 rgba(255, 255, 0, 69), stop:1 rgba(255, 255, 0, 69));")
+        self.add_img_btn.setIconSize(QSize(16, 16))
+        self.add_img_btn.setCheckable(False)
+        self.add_img_btn.setChecked(False)
         self.apply_btn_2 = QPushButton(self.page)
         self.apply_btn_2.setObjectName(u"apply_btn_2")
         self.apply_btn_2.setGeometry(QRect(20, 480, 81, 24))
@@ -406,7 +397,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.Settings.setCurrentIndex(1)
+        self.Settings.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -426,9 +417,7 @@ class Ui_MainWindow(object):
         self.swap_btn.setText(QCoreApplication.translate("MainWindow", u"swap", None))
         self.picked_color2.setText("")
         self.image_groupbox.setTitle(QCoreApplication.translate("MainWindow", u"Image", None))
-        self.add_img_btn.setText(QCoreApplication.translate("MainWindow", u"Add image", None))
-        self.save_as_btn.setText(QCoreApplication.translate("MainWindow", u"Save as", None))
-        self.save_btn.setText(QCoreApplication.translate("MainWindow", u"Save", None))
+        self.add_img_btn.setText(QCoreApplication.translate("MainWindow", u" Add image", None))
         self.apply_btn_2.setText(QCoreApplication.translate("MainWindow", u"Apply", None))
         self.cancel_btn_2.setText(QCoreApplication.translate("MainWindow", u"Cancel", None))
         self.default_btn_2.setText(QCoreApplication.translate("MainWindow", u"Set default settings", None))
