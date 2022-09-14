@@ -1,22 +1,29 @@
 #######################################
 # Author: Helena Masłowska
 # 30.07.2022
-
+from __future__ import print_function
 from operator import mod
 from tokenize import String
 from xml.dom.minicompat import EmptyNodeList
-from PIL import Image, ImageOps, ImageEnhance, ImageDraw, ImageFilter
+from PIL import Image, ImageOps, ImageEnhance, ImageDraw, ImageFilter, ImageColor
 from PIL.ImageQt import ImageQt			#read and change picture
 import sys
 import pathlib
 from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QColorDialog, QDialogButtonBox, QDialog, QPushButton, QLabel, QVBoxLayout, QMessageBox		#show on the screen
 from PySide2.QtGui import QPixmap, QColor, QImage, QIcon, QPalette
-
+import numpy as np
 import os
 import subprocess
-
+import numpy as np
+import scipy
+import scipy.misc
+import scipy.cluster
+import matplotlib.image as matimg
 from numpy import apply_along_axis
 from mainwindow import Ui_MainWindow
+
+import binascii
+import struct
 FILEBROWSER_PATH = os.path.join(os.getenv('WINDIR'), 'explorer.exe')
 
 # pyside2-uic mainwindow.ui -o mainwindow.py
@@ -127,6 +134,27 @@ class MainWindow(QMainWindow):
 		self.pixmap = QPixmap.fromImage(img) 
 		self.pixmap = self.scale(self.pixmap)
 
+	def get_color(self):
+		NUM_CLUSTERS = 5
+		im = self.curr_image
+		im = im.resize((150, 150))      # optional, to reduce time
+		ar = np.asarray(im)
+		shape = ar.shape
+		ar = ar.reshape(scipy.product(shape[:2]), shape[2]).astype(float)
+
+		#print('finding clusters')
+		codes, dist = scipy.cluster.vq.kmeans(ar, NUM_CLUSTERS)
+		#print('cluster centres:\n', codes)
+
+		vecs, dist = scipy.cluster.vq.vq(ar, codes)         # assign codes
+		counts, bins = scipy.histogram(vecs, len(codes))    # count occurrences
+
+		index_max = np.argmax(counts)                    # find most frequent
+		peak = codes[index_max]
+		col = binascii.hexlify(bytearray(int(c) for c in peak)).decode('ascii')
+		# print('most frequent is %s (#%s)' % (peak, col))
+		self.ui.color_from_image.setStyleSheet("background-color: #%s" % str(col))
+
 	def set_all_filters(self):
 		if self.filename:
 			self.curr_image = self.image.copy()
@@ -138,7 +166,7 @@ class MainWindow(QMainWindow):
 			self.invert_colors()
 			self.gauss_blur()
 			# color picker
-			self.ui.color_from_image.setStyleSheet("background-color: %s" % ) """tutaj wstaw ten kolor co wyjdzie"""
+			self.get_color()
 			# back filter
 			self.change_background()
 			self.update_image()
@@ -188,11 +216,12 @@ class MainWindow(QMainWindow):
 
 	def add_photo(self):
 		''' add/replace new photo to main screen and show it scaled on image_shower '''
-		self.filename, filter = QFileDialog.getOpenFileName( parent=self, caption='Open me!!!', filter="Image files (*.png *.jpg)" )	
+		self.filename, _ = QFileDialog.getOpenFileName( parent=self, caption='Open me!!!', filter="Image files (*.png *.jpg)" )	
 		if self.filename != '':
 			self.image = Image.open(self.filename)
 			self.curr_image = Image.open(self.filename)
 			self.filetype = pathlib.Path(self.filename).suffix
+			self.get_color()
 			self.change_background()
 			self.update_image()
 
@@ -274,6 +303,7 @@ class MainWindow(QMainWindow):
 			self.change_background()
 	
 	def swap_colors(self):
+		''' simply swap colors of 2 buttons '''
 		color1 = self.ui.picked_color1.palette().button().color().name()
 		color2 = self.ui.picked_color2.palette().button().color().name()
 		self.ui.picked_color1.setStyleSheet("background-color: %s" % color2)
@@ -342,14 +372,26 @@ class MainWindow(QMainWindow):
 
 	def change_color_spinbox(self):
 		self.ui.color_spinbox.setValue(self.ui.color_slider.value())
+		if self.ui.color_slider.value() != self.ui.color_slider.maximum():
+			self.ui.color_chbox.setChecked(False)
+		else:
+			self.ui.color_chbox.setChecked(True)
 		self.set_all_filters()
 
 	def change_light_spinbox(self):
 		self.ui.light_spinbox.setValue(self.ui.light_slider.value())
+		if self.ui.light_slider.value() != self.ui.light_slider.maximum():
+			self.ui.light_chbox.setChecked(False)
+		else:
+			self.ui.light_chbox.setChecked(True)
 		self.set_all_filters()
 
 	def change_contrast_spinbox(self):
 		self.ui.contrast_spinbox.setValue(self.ui.contrast_slider.value())
+		if self.ui.contrast_slider.value() != self.ui.contrast_slider.maximum():
+			self.ui.contrast_chbox.setChecked(False)
+		else:
+			self.ui.contrast_chbox.setChecked(True)
 		self.set_all_filters()
 
 	def invert_colors(self):
