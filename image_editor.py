@@ -26,7 +26,7 @@ import binascii
 import struct
 FILEBROWSER_PATH = os.path.join(os.getenv('WINDIR'), 'explorer.exe')
 
-# pyside2-uic mainwindow.ui -o mainwindow.py
+# kompilacja qtcreatora po zapisaniu: pyside2-uic mainwindow.ui -o mainwindow.py
 
 # qt - czyta i zapisuje obrazki
 # pil - obrobka obrazu
@@ -112,7 +112,7 @@ class MainWindow(QMainWindow):
 			# 	self.image.convert("RGBA").save(self.filename_temp)	#ten convert rgba szkodzi jpgom bo one nie mają kanału alpha, ale bez A też nie działa xd
 			self.image.save(self.filename_temp)
 		except IOError:
-			print("error", self.filename_temp)
+			print("can't save file", self.filename_temp)
 
 	def scale(self, pixmap: QPixmap):
 		''' scale pixmap '''
@@ -124,6 +124,9 @@ class MainWindow(QMainWindow):
 		return pixmap
 	
 	def merge_images(self, foreground, background):
+		''' image temporarily is saved on RAM: foreground for transparent images and background, so here you merge these 2 layers
+		:return: merged image
+		'''
 		background.paste(foreground, (0, 0), foreground)
 		return background
 
