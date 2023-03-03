@@ -1,6 +1,6 @@
 # Paintroom
-- This repository contains my image editor using Python and QtCreator. 
-- It can be used to simply edit image to show image in other colors and contrast.
+- This repository contains my image editor using Python in Visual Studio and GUI with QtCreator. 
+- It can be used to simply edit image to show image in other colors and contrast. You can add Gaussian blur too!
 
 # Example
 Here is example of running app and editing colour and contrast.
