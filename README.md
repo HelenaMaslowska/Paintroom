@@ -5,7 +5,7 @@
 <img src="https://user-images.githubusercontent.com/44245185/222733580-770a6254-5cf8-4b2e-9db1-6cce934827b3.png" alt="example of modify transparency on image">
 
 # Export file
-You can export file by one click! Your image is sent to paintroom_temp_image file.
+You can export file by one click! Press ```Apply``` which save your image in paintroom_temp_image file.
 ![image](https://github.com/HelenaMaslowska/Paintroom/blob/master/paintroom_temp_image.jpg)
  
 ## Author
