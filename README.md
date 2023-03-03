@@ -1,5 +1,5 @@
 # Paintroom
-- This repository contains my image editor using Python. 
+- This repository contains my image editor using Python and QtCreator. 
 - It can be used to simply edit image to show image in other colors and contrast.
 
 # Example
